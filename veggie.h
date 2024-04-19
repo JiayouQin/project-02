@@ -24,6 +24,8 @@ public:
 		this->name = name;
 		this->scorePoint = scorePoint;
 	};
+	virtual ~Veggie() {
+	};
 	std::string getName();
 	int getScorePoint();
 };

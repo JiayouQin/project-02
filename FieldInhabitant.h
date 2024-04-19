@@ -19,8 +19,9 @@ Jiayou Qin 04/18/2025
 class FieldInhabitant {
 	std::string symbol;//this will be the symbol shown on the game grid
 protected:
-	virtual ~FieldInhabitant() = 0;
+	
 public:
+	virtual ~FieldInhabitant() = 0;
 	FieldInhabitant(std::string );
 	std::string getSymbol();
 };

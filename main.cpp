@@ -1,7 +1,11 @@
-#include "FieldInhabitant.h"
-#include "Veggie.h"
+#define DEBUG
+
+#include "gameEngine.h"
 
 int main() {
+
+	GameEngine engine;
+	engine.initializeGame();
 
 
 	return 0;

@@ -1,3 +1,4 @@
+*.json
 *.sln
 *.vcxproj
 *.filters

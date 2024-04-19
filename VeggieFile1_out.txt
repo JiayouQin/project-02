@@ -1,0 +1,937 @@
+Please enter the name of the vegetable point file: VeggieFile
+VeggieFile does not exist! Please enter the name of the vegetable point file: VeggieFile1.csv
+################################
+# C     B        P  O  P       #
+# V           B  O  P        C #
+#       C  G              C    #
+# B        T           G       #
+# P        T           P       #
+#                C             #
+#          G        P          #
+#    P              G  G       #
+#    T  B     B                #
+#    B                 C     T #
+################################
+Welcome to Captain Veggie!
+The rabbits are invading your garden and you must harvest
+as many vegetables as possible before the rabbits eat them
+all! Each vegetable is worth a different number of points
+so go for the high score!
+
+The vegetables are:
+G: Garlic, 5
+P: Potato, 1
+O: Onion, 3
+B: Bell Pepper, 3
+T: Tomato, 6
+C: Carrot, 2
+
+Captain Veggie is V, and the rabbits are R's.
+
+Catching a rabbit is worth 5 points, but more are
+always on the way!
+
+Good luck!
+30 veggies remaining. Current score: 0
+################################
+# C     B        P  O  P       #
+# V           B  O  P        C #
+#       C  G              C    #
+# B        T           G       #
+# P        T           P       #
+#                C             #
+#          G        P          #
+#    P              G  G       #
+#    T  B     B                #
+#    B                 C     T #
+################################
+Would you like to move up(W), down(S), left(A), or right(D):left
+left is not a valid option!
+Oh no! Here comes another rabbit!
+
+30 veggies remaining. Current score: 0
+################################
+# C     B        P  O  P       #
+# V           B  O  P        C #
+#       C  G              C    #
+# B        T           G       #
+# P        T           P       #
+#                C             #
+#       R  G        P          #
+#    P              G  G       #
+#    T  B     B                #
+#    B                 C     T #
+################################
+Would you like to move up(W), down(S), left(A), or right(D):w
+Yummy! A delicious Carrot
+
+29 veggies remaining. Current score: 2
+################################
+# V     B        P  O  P       #
+#             B  O  P        C #
+#       C  G              C    #
+# B        T           G       #
+# P        T           P       #
+#                C             #
+#          G        P          #
+#    P     R        G  G       #
+#    T  B     B                #
+#    B                 C     T #
+################################
+Would you like to move up(W), down(S), left(A), or right(D):w
+You can't move that way!
+
+28 veggies remaining. Current score: 2
+################################
+# V     B        P  O  P       #
+#             B  O  P        C #
+#       C  G              C    #
+# B        T           G       #
+# P        T           P       #
+#                C             #
+#          G        P          #
+#    P              G  G       #
+#    T  R     B                #
+#    B                 C     T #
+################################
+Would you like to move up(W), down(S), left(A), or right(D):a
+You can't move that way!
+
+27 veggies remaining. Current score: 2
+################################
+# V     B        P  O  P       #
+#             B  O  P        C #
+#       C  G              C    #
+# B        T           G       #
+# P        T           P       #
+#                C             #
+#          G        P          #
+#    R              G  G       #
+#    T        B                #
+#    B                 C     T #
+################################
+Would you like to move up(W), down(S), left(A), or right(D):d
+
+27 veggies remaining. Current score: 2
+################################
+#    V  B        P  O  P       #
+#             B  O  P        C #
+#       C  G              C    #
+# B        T           G       #
+# P        T           P       #
+#                C             #
+#       R  G        P          #
+#                   G  G       #
+#    T        B                #
+#    B                 C     T #
+################################
+Would you like to move up(W), down(S), left(A), or right(D):d
+Yummy! A delicious Bell Pepper
+Oh no! Here comes another rabbit!
+
+26 veggies remaining. Current score: 5
+################################
+#       V        P  O  P     R #
+#             B  O  P        C #
+#       C  G              C    #
+# B        T           G       #
+# P        T           P       #
+#                C             #
+#          G        P          #
+#       R           G  G       #
+#    T        B                #
+#    B                 C     T #
+################################
+Would you like to move up(W), down(S), left(A), or right(D):s
+
+26 veggies remaining. Current score: 5
+################################
+#                P  O  P     R #
+#       V     B  O  P        C #
+#       C  G              C    #
+# B        T           G       #
+# P        T           P       #
+#                C             #
+#          G        P          #
+#                   G  G       #
+#    T  R     B                #
+#    B                 C     T #
+################################
+Would you like to move up(W), down(S), left(A), or right(D):d
+
+26 veggies remaining. Current score: 5
+################################
+#                P  O  P     R #
+#          V  B  O  P        C #
+#       C  G              C    #
+# B        T           G       #
+# P        T           P       #
+#                C             #
+#          G        P          #
+#    R              G  G       #
+#    T        B                #
+#    B                 C     T #
+################################
+Would you like to move up(W), down(S), left(A), or right(D):d
+Yummy! A delicious Bell Pepper
+
+25 veggies remaining. Current score: 8
+################################
+#                P  O  P       #
+#             V  O  P     R  C #
+#       C  G              C    #
+# B        T           G       #
+# P        T           P       #
+#                C             #
+#          G        P          #
+#                   G  G       #
+#    T  R     B                #
+#    B                 C     T #
+################################
+Would you like to move up(W), down(S), left(A), or right(D):d
+Yummy! A delicious Onion
+
+24 veggies remaining. Current score: 11
+################################
+#                P  O  P     R #
+#                V  P        C #
+#       C  G              C    #
+# B        T           G       #
+# P        T           P       #
+#                C             #
+#          G        P          #
+#                   G  G       #
+#    T  R     B                #
+#    B                 C     T #
+################################
+Would you like to move up(W), down(S), left(A), or right(D):d
+Yummy! A delicious Potato
+Oh no! Here comes another rabbit!
+
+23 veggies remaining. Current score: 12
+################################
+#                P  O  P  R    #
+#                   V        C #
+#       C  G              C    #
+# B        T        R  G       #
+# P        T           P       #
+#                C             #
+#          G        P          #
+#                   G  G       #
+#    T     R  B                #
+#    B                 C     T #
+################################
+Would you like to move up(W), down(S), left(A), or right(D):s
+
+22 veggies remaining. Current score: 12
+################################
+#                P  O  P       #
+#                      R     C #
+#       C  G     R  V     C    #
+# B        T           G       #
+# P        T           P       #
+#                C             #
+#          G        P          #
+#                   G  G       #
+#    T        R                #
+#    B                 C     T #
+################################
+Would you like to move up(W), down(S), left(A), or right(D):a
+
+22 veggies remaining. Current score: 12
+################################
+#                P  O  P       #
+#                            C #
+#       C  G     V     R  C    #
+# B        T  R        G       #
+# P        T           P       #
+#                C             #
+#          G        P          #
+#                R  G  G       #
+#    T                         #
+#    B                 C     T #
+################################
+Would you like to move up(W), down(S), left(A), or right(D):s
+
+21 veggies remaining. Current score: 12
+################################
+#                P  O  P       #
+#                         R  C #
+#       C  G              C    #
+# B        T     V     G       #
+# P        T     R     P       #
+#                C             #
+#          G        P          #
+#                   R  G       #
+#    T                         #
+#    B                 C     T #
+################################
+Would you like to move up(W), down(S), left(A), or right(D):s
+Finally got one of those pesky bunnies!
+
+21 veggies remaining. Current score: 17
+################################
+#                P  O  P  R    #
+#                            C #
+#       C  G              C    #
+# B        T           G       #
+# P        T     V     P       #
+#                C             #
+#          G        P          #
+#                      G       #
+#    T           R             #
+#    B                 C     T #
+################################
+Would you like to move up(W), down(S), left(A), or right(D):s
+Yummy! A delicious Carrot
+Oh no! Here comes another rabbit!
+
+20 veggies remaining. Current score: 19
+################################
+#                P  O  P  R    #
+#                            C #
+#       C  G              C    #
+# B        T           G       #
+# P        T           P       #
+#             R  V             #
+#          G        P          #
+#                R     G       #
+#    T                         #
+#    B                 C     T #
+################################
+Would you like to move up(W), down(S), left(A), or right(D):a
+
+20 veggies remaining. Current score: 19
+################################
+#                P  O  P       #
+#                      R     C #
+#       C  G              C    #
+# B        T           G       #
+# P        T           P       #
+#          R  V                #
+#          G        P          #
+#                      G       #
+#    T              R          #
+#    B                 C     T #
+################################
+Would you like to move up(W), down(S), left(A), or right(D):a
+
+18 veggies remaining. Current score: 19
+################################
+#                P  O  P       #
+#                            C #
+#       C  G           R  C    #
+# B        T           G       #
+# P        T           P       #
+#          V                   #
+#          R        P          #
+#                      G       #
+#    T                         #
+#    B                 R     T #
+################################
+Would you like to move up(W), down(S), left(A), or right(D):s
+
+17 veggies remaining. Current score: 19
+################################
+#                P  O  P       #
+#                            C #
+#       C  G              C    #
+# B        T           R       #
+# P        T           P       #
+#                              #
+#          V        P          #
+#       R              G       #
+#    T                         #
+#    B                 R     T #
+################################
+Would you like to move up(W), down(S), left(A), or right(D):a
+
+17 veggies remaining. Current score: 19
+################################
+#                P  O  P       #
+#                            C #
+#       C  G              C    #
+# B        T              R    #
+# P        T           P       #
+#                              #
+#       V           P          #
+#          R           G       #
+#    T                         #
+#    B                 R     T #
+################################
+Would you like to move up(W), down(S), left(A), or right(D):s
+Oh no! Here comes another rabbit!
+
+17 veggies remaining. Current score: 19
+################################
+#                P  O  P       #
+#                            C #
+#       C  G              C    #
+# B        T                   #
+# P        T           P     R #
+#                              #
+#             R     P          #
+#       V              G       #
+#    T     R                   #
+#    B                 R     T #
+################################
+Would you like to move up(W), down(S), left(A), or right(D):s
+
+17 veggies remaining. Current score: 19
+################################
+#                P  O  P       #
+#                            C #
+#       C  G              C    #
+# B        T              R    #
+# P        T           P       #
+#                              #
+#                   P          #
+#             R        G       #
+#    T  V  R        R          #
+#    B                       T #
+################################
+Would you like to move up(W), down(S), left(A), or right(D):a
+Yummy! A delicious Tomato
+
+16 veggies remaining. Current score: 25
+################################
+#                P  O  P       #
+#                            C #
+#       C  G              C    #
+# B        T           R       #
+# P        T           P       #
+#                              #
+#                   P          #
+#             R        G       #
+#    V                         #
+#    B     R        R        T #
+################################
+Would you like to move up(W), down(S), left(A), or right(D):s
+Yummy! A delicious Bell Pepper
+
+15 veggies remaining. Current score: 28
+################################
+#                P  O  P       #
+#                            C #
+#       C  G              C    #
+# B        T                   #
+# P        T        R  P       #
+#                              #
+#                R  P          #
+#                      G       #
+#                   R          #
+#    V  R                    T #
+################################
+Would you like to move up(W), down(S), left(A), or right(D):a
+
+14 veggies remaining. Current score: 28
+################################
+#                P  O  P       #
+#                            C #
+#       C  G              C    #
+# B        T     R             #
+# P        T           P       #
+#                   R          #
+#                   P          #
+#                      R       #
+#                              #
+# V     R                    T #
+################################
+Would you like to move up(W), down(S), left(A), or right(D):w
+Oh no! Here comes another rabbit!
+
+13 veggies remaining. Current score: 28
+################################
+#                P  O  P       #
+#                            C #
+#       C  G           R  C    #
+# B        T  R                #
+# P        T           P       #
+#                              #
+#                   R          #
+#                              #
+# V                       R    #
+#       R                    T #
+################################
+Would you like to move up(W), down(S), left(A), or right(D):w
+
+13 veggies remaining. Current score: 28
+################################
+#                P  O  P       #
+#                            C #
+#       C  G     R        C    #
+# B        T              R    #
+# P        T           P       #
+#                              #
+#                              #
+# V                 R     R    #
+#                              #
+#       R                    T #
+################################
+Would you like to move up(W), down(S), left(A), or right(D):w
+
+13 veggies remaining. Current score: 28
+################################
+#                P  O  P       #
+#                            C #
+#       C  G        R     C    #
+# B        T           R       #
+# P        T           P       #
+#                              #
+# V                          R #
+#                              #
+#                R             #
+#          R                 T #
+################################
+Would you like to move up(W), down(S), left(A), or right(D):w
+
+13 veggies remaining. Current score: 28
+################################
+#                P  O  P       #
+#                            C #
+#       C  G        R     C    #
+# B        T           R       #
+# P        T           P       #
+# V                            #
+#                         R    #
+#             R                #
+#                              #
+#          R                 T #
+################################
+Would you like to move up(W), down(S), left(A), or right(D):w
+Yummy! A delicious Potato
+
+12 veggies remaining. Current score: 29
+################################
+#                P  O  P       #
+#                      R     C #
+#       C  G              C    #
+# B        T                   #
+# V        T        R  P       #
+#                      R       #
+#                              #
+#          R                   #
+#       R                      #
+#                            T #
+################################
+Would you like to move up(W), down(S), left(A), or right(D):w
+Yummy! A delicious Bell Pepper
+
+10 veggies remaining. Current score: 32
+################################
+#                P  O  P       #
+#                            C #
+#       C  G           R  C    #
+# V        T                   #
+#          T           R       #
+#                      R       #
+#                              #
+#       R                      #
+#       R                      #
+#                            T #
+################################
+Would you like to move up(W), down(S), left(A), or right(D):d
+
+10 veggies remaining. Current score: 32
+################################
+#                P  O  P       #
+#                   R        C #
+#       C  G              C    #
+#    V     T              R    #
+#          T                   #
+#                   R          #
+#                              #
+#       R  R                   #
+#                              #
+#                            T #
+################################
+Would you like to move up(W), down(S), left(A), or right(D):d
+
+10 veggies remaining. Current score: 32
+################################
+#                P  O  P       #
+#                R           C #
+#       C  G              C  R #
+#       V  T                   #
+#          T     R             #
+#                              #
+#                              #
+#                              #
+#       R  R                   #
+#                            T #
+################################
+Would you like to move up(W), down(S), left(A), or right(D):w
+Yummy! A delicious Carrot
+
+9 veggies remaining. Current score: 34
+################################
+#                P  O  P       #
+#                   R        C #
+#       V  G              C  R #
+#          T                   #
+#          T  R                #
+#                              #
+#                              #
+#             R                #
+#    R                         #
+#                            T #
+################################
+Would you like to move up(W), down(S), left(A), or right(D):d
+Yummy! A delicious Garlic
+
+7 veggies remaining. Current score: 39
+################################
+#                P  O  P       #
+#                            C #
+#          V     R        R    #
+#          T  R                #
+#          T                   #
+#                              #
+#                              #
+#                              #
+#             R                #
+#    R                       T #
+################################
+Would you like to move up(W), down(S), left(A), or right(D):s
+Yummy! A delicious Tomato
+
+6 veggies remaining. Current score: 45
+################################
+#                P  O  P       #
+#                            C #
+#                         R    #
+#          V  R  R             #
+#          T                   #
+#                              #
+#                              #
+#             R                #
+# R                            #
+#                            T #
+################################
+Would you like to move up(W), down(S), left(A), or right(D):s
+Yummy! A delicious Tomato
+
+5 veggies remaining. Current score: 51
+################################
+#                P  O  P       #
+#                            C #
+#                R             #
+#                R           R #
+#          V                   #
+#                              #
+#                R             #
+#    R                         #
+#                              #
+#                            T #
+################################
+Would you like to move up(W), down(S), left(A), or right(D):d
+
+5 veggies remaining. Current score: 51
+################################
+#                P  O  P       #
+#                            C #
+#             R  R             #
+#                            R #
+#             V                #
+#                              #
+#    R                         #
+#                   R          #
+#                              #
+#                            T #
+################################
+Would you like to move up(W), down(S), left(A), or right(D):d
+
+5 veggies remaining. Current score: 51
+################################
+#                P  O  P       #
+#             R              C #
+#          R                   #
+#                              #
+#                V        R    #
+# R                            #
+#                              #
+#                              #
+#                      R       #
+#                            T #
+################################
+Would you like to move up(W), down(S), left(A), or right(D):w
+
+5 veggies remaining. Current score: 51
+################################
+#                P  O  P       #
+#          R                 C #
+#                              #
+#       R        V     R       #
+#                              #
+# R                            #
+#                              #
+#                   R          #
+#                              #
+#                            T #
+################################
+Would you like to move up(W), down(S), left(A), or right(D):w
+
+5 veggies remaining. Current score: 51
+################################
+#          R     P  O  P       #
+#                            C #
+#          R     V             #
+#                         R    #
+#                              #
+# R                            #
+#                              #
+#                      R       #
+#                              #
+#                            T #
+################################
+Would you like to move up(W), down(S), left(A), or right(D):w
+
+5 veggies remaining. Current score: 51
+################################
+#             R  P  O  P       #
+#                V           C #
+#                              #
+#             R                #
+#                            R #
+# R                            #
+#                              #
+#                              #
+#                         R    #
+#                            T #
+################################
+Would you like to move up(W), down(S), left(A), or right(D):w
+Yummy! A delicious Potato
+
+4 veggies remaining. Current score: 52
+################################
+#             R  V  O  P       #
+#                            C #
+#                              #
+#          R                   #
+# R                          R #
+#                              #
+#                              #
+#                              #
+#                      R       #
+#                            T #
+################################
+Would you like to move up(W), down(S), left(A), or right(D):d
+Yummy! A delicious Onion
+
+3 veggies remaining. Current score: 55
+################################
+#          R        V  P       #
+#                            C #
+#                              #
+#                              #
+# R        R              R    #
+#                              #
+#                              #
+#                      R       #
+#                              #
+#                            T #
+################################
+Would you like to move up(W), down(S), left(A), or right(D):d
+Yummy! A delicious Potato
+
+2 veggies remaining. Current score: 56
+################################
+#          R           V       #
+#                            C #
+#                              #
+#          R                   #
+# R                          R #
+#                              #
+#                              #
+#                   R          #
+#                              #
+#                            T #
+################################
+Would you like to move up(W), down(S), left(A), or right(D):d
+
+2 veggies remaining. Current score: 56
+################################
+#          R              V    #
+#                            C #
+#          R                   #
+#                              #
+# R                          R #
+#                              #
+#                              #
+#                R             #
+#                              #
+#                            T #
+################################
+Would you like to move up(W), down(S), left(A), or right(D):d
+
+2 veggies remaining. Current score: 56
+################################
+#       R                    V #
+#                            C #
+#                              #
+# R        R                   #
+#                            R #
+#                              #
+#                R             #
+#                              #
+#                              #
+#                            T #
+################################
+Would you like to move up(W), down(S), left(A), or right(D):s
+Yummy! A delicious Carrot
+
+1 veggies remaining. Current score: 58
+################################
+#                              #
+#    R                       V #
+#    R                         #
+#       R                      #
+#                            R #
+#                              #
+#                R             #
+#                              #
+#                              #
+#                            T #
+################################
+Would you like to move up(W), down(S), left(A), or right(D):s
+
+1 veggies remaining. Current score: 58
+################################
+#    R                         #
+#                              #
+#    R                       V #
+#       R                      #
+#                            R #
+#                R             #
+#                              #
+#                              #
+#                              #
+#                            T #
+################################
+Would you like to move up(W), down(S), left(A), or right(D):s
+
+1 veggies remaining. Current score: 58
+################################
+#       R                      #
+#       R                      #
+#                              #
+#                            V #
+#    R                    R    #
+#                R             #
+#                              #
+#                              #
+#                              #
+#                            T #
+################################
+Would you like to move up(W), down(S), left(A), or right(D):s
+
+1 veggies remaining. Current score: 58
+################################
+#       R                      #
+#       R                      #
+#                              #
+# R                            #
+#                         R  V #
+#             R                #
+#                              #
+#                              #
+#                              #
+#                            T #
+################################
+Would you like to move up(W), down(S), left(A), or right(D):s
+
+1 veggies remaining. Current score: 58
+################################
+#          R                   #
+#                              #
+#    R  R                      #
+#                              #
+#                         R    #
+#                            V #
+#                R             #
+#                              #
+#                              #
+#                            T #
+################################
+Would you like to move up(W), down(S), left(A), or right(D):s
+
+1 veggies remaining. Current score: 58
+################################
+#       R                      #
+#                              #
+#          R                   #
+# R                            #
+#                         R    #
+#                              #
+#                            V #
+#             R                #
+#                              #
+#                            T #
+################################
+Would you like to move up(W), down(S), left(A), or right(D):s
+
+1 veggies remaining. Current score: 58
+################################
+#       R                      #
+#                              #
+# R           R                #
+#                              #
+#                              #
+#                      R       #
+#                              #
+#                            V #
+#             R                #
+#                            T #
+################################
+Would you like to move up(W), down(S), left(A), or right(D):s
+
+1 veggies remaining. Current score: 58
+################################
+#       R                      #
+#                R             #
+#    R                         #
+#                              #
+#                              #
+#                              #
+#                         R    #
+#                              #
+#                R           V #
+#                            T #
+################################
+Would you like to move up(W), down(S), left(A), or right(D):s
+Yummy! A delicious Tomato
+
+################################
+#       R                      #
+#             R                #
+#                              #
+#       R                      #
+#                              #
+#                              #
+#                            R #
+#                R             #
+#                              #
+#                            V #
+################################
+GAME OVER!
+You managed to harvest the following vegetables:
+Carrot
+Bell Pepper
+Bell Pepper
+Onion
+Potato
+Carrot
+Tomato
+Bell Pepper
+Potato
+Bell Pepper
+Carrot
+Garlic
+Tomato
+Tomato
+Potato
+Onion
+Potato
+Carrot
+Tomato
+Your score was: 64

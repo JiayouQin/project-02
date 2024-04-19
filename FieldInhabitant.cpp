@@ -8,4 +8,5 @@ Define the deconstructor so that is does nothing
 #include "FieldInhabitant.h"
 
 FieldInhabitant::FieldInhabitant(std::string symbol) { this->symbol = symbol;}
+FieldInhabitant::~FieldInhabitant() {}
 std::string FieldInhabitant::getSymbol() { return symbol; }
