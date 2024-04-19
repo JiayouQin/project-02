@@ -102,4 +102,22 @@ void GameEngine::printField() {
 		cout << "#" << endl;
 	}
 	for (int j = 0; j <= w; j++) cout << "##"; cout << endl;
+	cout <<"remaining veggies: " << remainingVeggies() << endl;
+}
+
+int GameEngine::remainingVeggies() {
+	int remainingVeggies = 0;
+	for (int i = 0; i < h; i++) {
+		for (int j = 0; j < w; j++) {
+			auto& ptr = grid[i][j];
+			if (!ptr) continue;
+			else {
+				if (dynamic_cast<Veggie*>(ptr) ) remainingVeggies++;
+			}
+		}
+	}
+	return remainingVeggies;
+
+
+
 }

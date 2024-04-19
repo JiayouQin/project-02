@@ -40,6 +40,7 @@ public:
 	//void moveRabbits();
 	//void moveCaptain();
 	//void gameOver();
+	int remainingVeggies();
 };
 
 
