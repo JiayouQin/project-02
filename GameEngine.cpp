@@ -43,11 +43,11 @@ void GameEngine::initVeggies() {
 	while (getline(f, buf)) {
 		stringstream ss(buf);
 		if (i == 0) {
-			getline(ss, buf,',');
 			getline(ss, buf, ',');
-			w = stoi(buf);
 			getline(ss, buf, ',');
 			h = stoi(buf);
+			getline(ss, buf, ',');
+			w = stoi(buf);
 			i++;
 			continue;
 		}
@@ -55,10 +55,53 @@ void GameEngine::initVeggies() {
 		getline(ss, symbolTemp, ',');
 		getline(ss, buf, ',');
 		scoreTemp = stoi(buf);
-		vegetables.push_back(new Veggie(symbolTemp,nameTemp,scoreTemp));
+		vegetables.push_back(new Veggie(symbolTemp, nameTemp, scoreTemp));
 		i++;
 	}
 	f.close();
+	grid = new FieldInhabitant**[h];
+	for (int i = 0; i < h; i++) {
+		grid[i] = new FieldInhabitant*[w];
+	}
+	vector <int> v;
+	for (int i = 0; i < h * w; i++) {
+		v.push_back(i);
+	}
+
+	RandomGenerator<int> randomGenerator;
+	randomGenerator.shuffleVector(v);
+
+	//initialize the array with null pointer!
+	for (int i = 0; i < h*w; i++) {
+		int y = v[i] / w;
+		int x = v[i] % w;
+		grid[y][x] = nullptr;
+	}
+	for (int i = 0; i < NUMBEROFVEGGIES; i++) {
+		int y = v[i] / w;
+		int x = v[i] % w;
+		int idx = i % vegetables.size();
+		grid[y][x] = new Veggie(vegetables[idx]->getSymbol(), vegetables[idx]->getName(), vegetables[idx]->getScorePoint());
+	}
+
+	string symbolBuf;
+	for (int j = 0; j <= w; j++) cout << "##"; cout << endl;
+
+	for (int i = 0; i < h; i++) {
+		cout << "#";
+		for (int j = 0; j < w; j++) {
+			auto& ptr = grid[i][j];
+			if (!ptr) { symbolBuf = " "; }
+			else {
+				symbolBuf = ptr->getSymbol();
+			}
+			cout << symbolBuf << " ";
+		}
+		cout << "#" << endl;
+	}
+	for (int j = 0; j <= w; j++) cout << "##"; cout << endl;
+
+	getchar();
 	//TODO
 	/*
 	Generate the 2D, dynamic array of FieldInhabitant pointers of the dimensions specified in the file

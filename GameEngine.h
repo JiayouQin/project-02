@@ -9,18 +9,19 @@ Appropriate header guards
 #ifndef GAMEENGINE_H
 #define GAMEENGINE_H
 #include <vector>
+#include "getRandom.h"
 #include "Veggie.h"
 #include "FieldInhabitant.h"
 
+
 class GameEngine {
 	//A FieldInhabitant triple pointer for storing a 2D dynamic array of FieldInhabitant pointers
-	FieldInhabitant** grid = nullptr;	// a 2D grid
+	FieldInhabitant*** grid = nullptr;	// a 2D grid
 	//Integers to store the height and width of the field, and the player’s score
 	int h, w; // height and width
 	int score;
 	const int NUMBEROFVEGGIES = 30; //Constant integers to store the initial number of vegetables in the game named NUMBEROFVEGGIES, initialized to 30, 
 	const int NUMBEROFRABBITS = 5; //and the number of rabbits in the game named NUMBEROFRABBITS, initialized to 5
-	
 	//TODO: A Captain pointer to store the captain object
 	//TODO: A vector of Rabbit pointers to store the rabbit objects
 	std::vector<Veggie*> vegetables;//A vector of Veggie pointers to store all of the possible vegetable objects
