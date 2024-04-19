@@ -15,6 +15,7 @@ Appropriate header guards
 
 
 class GameEngine {
+	RandomGenerator randomGenerator;
 	//A FieldInhabitant triple pointer for storing a 2D dynamic array of FieldInhabitant pointers
 	FieldInhabitant*** grid = nullptr;	// a 2D grid
 	//Integers to store the height and width of the field, and the player’s score

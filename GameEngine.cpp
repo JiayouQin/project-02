@@ -68,7 +68,7 @@ void GameEngine::initVeggies() {
 		v.push_back(i);
 	}
 
-	RandomGenerator<int> randomGenerator;
+	
 	randomGenerator.shuffleVector(v);
 
 	//initialize the array with null pointer!
