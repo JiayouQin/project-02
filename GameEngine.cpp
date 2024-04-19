@@ -83,10 +83,12 @@ void GameEngine::initVeggies() {
 		int idx = i % vegetables.size();
 		grid[y][x] = new Veggie(vegetables[idx]->getSymbol(), vegetables[idx]->getName(), vegetables[idx]->getScorePoint());
 	}
+}
 
+void GameEngine::printField() {
+	using namespace std;
 	string symbolBuf;
 	for (int j = 0; j <= w; j++) cout << "##"; cout << endl;
-
 	for (int i = 0; i < h; i++) {
 		cout << "#";
 		for (int j = 0; j < w; j++) {
@@ -100,15 +102,4 @@ void GameEngine::initVeggies() {
 		cout << "#" << endl;
 	}
 	for (int j = 0; j <= w; j++) cout << "##"; cout << endl;
-
-	getchar();
-	//TODO
-	/*
-	Generate the 2D, dynamic array of FieldInhabitant pointers of the dimensions specified in the file
-	All slots should be initialized to nullptr
-	The field should be populated with NUMBEROFVEGGIES number of new Veggie objects, located at random locations in the field
-	If a chosen random location is occupied by another Veggie object, repeatedly choose a new location until an empty location is found
-	Make sure you seed your random number generator to have new random fields each time you play the game
-	Do not forget to close your file after you are done reading from it!
-	*/
 }

@@ -36,7 +36,7 @@ public:
 	//Declarations for public functions named initializeGame(), intro(), printField(), moveRabbits(), moveCaptain(), 
 	//and gameOver() that take in no parameters and return nothing
 	void initializeGame();
-	//void printField();
+	void printField();
 	//void moveRabbits();
 	//void moveCaptain();
 	//void gameOver();
