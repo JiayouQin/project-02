@@ -11,3 +11,7 @@
 Rabbit::Rabbit(int x, int y) :Creature(x, y, "R") {
 		
 }
+
+/*de-constructor definition*/
+Rabbit::~Rabbit()
+{}
