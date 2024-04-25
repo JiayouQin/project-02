@@ -12,6 +12,8 @@ Appropriate header guards
 #include "getRandom.h"
 #include "Veggie.h"
 #include "FieldInhabitant.h"
+#include"Rabbit.h"
+
 
 
 class GameEngine {
@@ -23,13 +25,15 @@ class GameEngine {
 	int score;
 	const int NUMBEROFVEGGIES = 30; //Constant integers to store the initial number of vegetables in the game named NUMBEROFVEGGIES, initialized to 30, 
 	const int NUMBEROFRABBITS = 5; //and the number of rabbits in the game named NUMBEROFRABBITS, initialized to 5
+	const int RABBITPOINTS = 5;
 	//TODO: A Captain pointer to store the captain object
-	//TODO: A vector of Rabbit pointers to store the rabbit objects
+
+	std::vector<Rabbit*> rabbit;/* A vector of Rabbit pointers to store the rabbit objects*/
 	std::vector<Veggie*> vegetables;//A vector of Veggie pointers to store all of the possible vegetable objects
-	//Declarations for private functions named initVeggies(), initCaptain(), and initRabbits() that take in no parameters and return nothing
+	//Declarations for private functions named initVeggies(), initCaptain(), and spawnRabbits() that take in no parameters and return nothing
 	void initVeggies();
 	void initCaptain() {};
-	void initRabbits() {};
+	void spawnRabbits() ;
 	//Declarations for private functions named moveCptVertical() and moveCptHorizontal() that take in an integer representing the movement of the captain as a parameter and return nothing
 	//void moveCptVertical();
 	//void moveCptHorizontal();
@@ -38,7 +42,7 @@ public:
 	//and gameOver() that take in no parameters and return nothing
 	void initializeGame();
 	void printField();
-	//void moveRabbits();
+	void moveRabbits();
 	//void moveCaptain();
 	//void gameOver();
 	int remainingVeggies();
