@@ -14,10 +14,8 @@
 #include "veggie.h"
 
 class Captain: public Creature {
-
-private:
-	std::vector<Veggie*> Veggies;
 public:
+	std::vector<Veggie*> Veggies;
 	Captain(int x, int y);
 	virtual ~Captain();
 	void addVeggie(Veggie *veggie_obj);
