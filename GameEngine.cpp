@@ -4,62 +4,13 @@
 #include <sstream>
 #include <iostream>
 
-
-void GameEngine::initSnake() {
-	auto v = getEmptyFields();
-	randomGenerator.shuffleVector(v);
-	snake = new Snake(v[0].first,v[0].second);
-}
-
-void GameEngine::moveSanke() {
-	std::pair<int, int> m[4] = { {0,-1},{0,1},{-1,0},{1,0} }; //4 directions
-	std::vector<std::pair<int, int>> moves = { {0,0} };
-
-	for (auto& pair : m) {
-		int x = snake->getX() + m->first; int y = snake->getY() + m->second;
-		if (x<0 || x>w || y<0 || y>h) continue;
-		if (grid[y][x]) continue; //if not empty
-		moves.push_back({x,y});
-		//if captain.pos - snake.pos
-
-	}
-}
-
-
-bool GameEngine::addCallback(void(*func)(void*),void* instance) {
-	callbackList.push_back({ func, instance });
-	return true;
-}
-
-
 void GameEngine::initializeGame() {
-	//Test callback, idea is that once registered a callback procedure can be ignored
-
-	initVeggies();
 	initCaptain();
+	initVeggies();
 	spawnRabbits();
-	initSnake();
 	score = 0;
+	//gameOver();
 }
-
-void GameEngine::gameIteration() {
-	for (auto& callback : callbackList) {
-		callback.first(callback.second);
-	}
-}
-
-// return current empty field a pair in x,y format
-std::vector<std::pair<int,int>> GameEngine::getEmptyFields() {
-	std::vector<std::pair<int, int>> emptySlot;
-	for (int i = 0; i < h; i++) {
-		for (int j = 0; j < w; j++) {
-			if (grid[i][j]) continue;	//guard case
-			emptySlot.push_back({ j,i });
-		}
-	}
-	return emptySlot;
-}
-
 
 /*
  The user is prompted for the name of the veggie file, and if the user’s file name doesn’t exist, repeatedly prompts for a new file name until a file that does exist is provided
@@ -80,24 +31,28 @@ void GameEngine::initVeggies() {
 	string symbolTemp;
 	int scoreTemp;
 	while (!f.is_open()) {
-#ifndef DEBUG
-		cout << "please input the file path for vegetables" << endl;
+//#define DEBUG
+#ifdef DEBUG
+		cout << "Please enter the name of the vegetable point file: " << endl;
 		cin >> buf;
 		f.open(buf);
 #else
 		f.open("VeggieFile1.csv");
 #endif
+#undef DEBUG
+
 	}
 	int i = 0;
 	vegetables.clear();
 	while (getline(f, buf)) {
+		//int i = 0;
 		stringstream ss(buf);
 		if (i == 0) {
 			getline(ss, buf, ',');
 			getline(ss, buf, ',');
-			h = stoi(buf);
+			height = stoi(buf);
 			getline(ss, buf, ',');
-			w = stoi(buf);
+			width = stoi(buf);
 			i++;
 			continue;
 		}
@@ -109,62 +64,108 @@ void GameEngine::initVeggies() {
 		i++;
 	}
 	f.close();
-	grid = new FieldInhabitant**[h];
-	for (int i = 0; i < h; i++) {
-		grid[i] = new FieldInhabitant*[w];
+	//creation of field
+	grid = new FieldInhabitant**[height];
+	for (int i = 0; i < height; i++) {
+		grid[i] = new FieldInhabitant*[width];
 	}
-	vector<int> v;
-	for (int i = 0; i < h * w; i++) {
+#define QIN 0
+#if QIN
+
+	vector <int> v;
+	for (int i = 0; i < height * width; i++) {
 		v.push_back(i);
 	}
+
+
 	randomGenerator.shuffleVector(v);
 
 	//initialize the array with null pointer!
-	for (int i = 0; i < h * w; i++) {
-		int y = v[i] / w;
-		int x = v[i] % w;
+	for (int i = 0; i < height*width; i++) {
+		int y = v[i] / width;
+		int x = v[i] % width;
 		grid[y][x] = nullptr;
 	}
-	for (int i = 0; i <= NUMBEROFVEGGIES; i++) {
-		int y = v[i] / w;
-		int x = v[i] % w;
+	for (int i = 0; i < NUMBEROFVEGGIES; i++) {
+		int y = v[i] / width;
+		int x = v[i] % width;
 		int idx = i % vegetables.size();
-		grid[y][x] = new Veggie(vegetables[idx]->getSymbol(),
-				vegetables[idx]->getName(), vegetables[idx]->getScorePoint());
+		grid[y][x] = new Veggie(vegetables[idx]->getSymbol(), vegetables[idx]->getName(), vegetables[idx]->getScorePoint());
+		//why create new veggies again?? we already have veggies.
 	}
+# else
+	for(int y=0;y<height;y++){
+		for(int x=0;x<width;x++){
+			grid[y][x]=nullptr;
+		}
+	}
+
+	int veggies_planted=0;
+	while(veggies_planted != NUMBEROFVEGGIES){
+
+		int random_x;
+		int random_y;
+
+		random_x = get_random_number(0, width - 1);
+		random_y = get_random_number(0, height - 1);
+
+		if(grid[random_y][random_x]==nullptr){
+			int random_veggie_no=get_random_number(0, vegetables.size()-1);
+			grid[random_y][random_x]=new Veggie(vegetables[random_veggie_no]->getSymbol(), vegetables[random_veggie_no]->getName(), vegetables[random_veggie_no]->getScorePoint());//vegetables[veggies_planted];
+			veggies_planted++;
+		}
+		else{
+			continue;
+		}
+
+	}
+	#endif
+
 }
 
 void GameEngine::printField() {
-	//This needs to be updated
+	//cout << "remaining veggies: " << remainingVeggies() << endl;
 	using namespace std;
 	string symbolBuf;
-	for (int j = 0; j <= w; j++)
+	for (int j = 0; j <= width; j++) {
 		cout << "##";
+	}
 	cout << endl;
-	for (int i = 0; i < h; i++) {
+	for (int i = 0; i < height; i++) {
 		cout << "#";
-		for (int j = 0; j < w; j++) {
+		for (int j = 0; j < width; j++) {
 			auto &ptr = grid[i][j];
 			if (!ptr) {
 				symbolBuf = " ";
 			} else {
 				symbolBuf = ptr->getSymbol();
 			}
+
+#ifdef COLOR_DEFINED
+			if (symbolBuf == "V") {
+				cout << BLU << symbolBuf << RST << " ";
+			} else if (symbolBuf == "R") {
+				cout << RED << symbolBuf << RST << " ";
+			} else {
+				cout << GRN << symbolBuf << RST << " ";
+			}
+#else
 			cout << symbolBuf << " ";
+#endif
 		}
 		cout << "#" << endl;
 	}
-	for (int j = 0; j <= w; j++)
+	for (int j = 0; j <= width; j++)
 		cout << "##";
 	cout << endl;
-	cout << "remaining veggies: " << remainingVeggies() << endl;
+
 }
 
 int GameEngine::remainingVeggies() {
 	int remainingVeggies = 0;
-	for (int i = 0; i < h; i++) {
-		for (int j = 0; j < w; j++) {
-			auto &ptr = grid[i][j];
+	for (int i = 0; i < height; i++) {
+		for (int j = 0; j < width; j++) {
+			FieldInhabitant* &ptr = grid[i][j];
 			if (!ptr)
 				continue;
 			else {
@@ -187,43 +188,28 @@ int GameEngine::remainingVeggies() {
  location in the field*/
 
 void GameEngine::spawnRabbits() {
-	bool isNotEmpty = false;
-	vector<int> r;
-	for (int i = 0; i < h * w; i++) {
-		r.push_back(i);
-	}
-	static int currentRabbits = 0;
-	static int spawnR = 1;
 
-	if (currentRabbits < NUMBEROFRABBITS) {/*If the current number of rabbits is less than MAXNUMBEROFRABBITS*/
+	bool rabbit_planted = false;
+	while (rabbit_planted != true) {
 
-		randomGenerator.shuffleVector(r);/* random location is chosen for a Rabbit object*/
+		int random_x;
+		int random_y;
 
-		for (int i = 0; i < spawnR; i++) {
-			int y = r[i] / w;
-			int x = r[i] % w;
+		random_x = get_random_number(0, width - 1);
+		random_y = get_random_number(0, height - 1);
 
-			for (Rabbit *r : rabbit) {
-				if (r->getX() == x && r->getY() == y) {/*If a chosen random location is occupied by another object, repeatedly choose a
-				 new location until an empty location is found*/
-					isNotEmpty = true;
-					break;
-				}
-			}
-			if (isNotEmpty == false) {
-				Rabbit *rabbitObj = new Rabbit(x, y); /* A new Rabbit object is created using the random location and the object and assigned*/
-				rabbit.push_back(rabbitObj);/*added to the member variable vector of rabbits */
-				currentRabbits++;/*Increment the current rabbit*/
-				grid[y][x] = new Rabbit(x, y);
-
-			}
-
+		if (grid[random_y][random_x] == nullptr) {
+			Rabbit* newRabbit = new Rabbit(random_x, random_y);
+			rabbits.push_back(newRabbit);
+			grid[random_y][random_x] = newRabbit;
+			rabbit_planted = true;
+			cout<<"Oh no! Here comes another rabbit!"<<endl;
+		} else {
+			continue;
 		}
-		spawnR++;
 
-	} else {
-		//Do nothing
 	}
+	cout<<endl<<"there are "<<rabbits.size()<<" rabbits"<<endl;
 }
 /*Define the function moveRabbits() such that:
  Each Rabbit object in the vector of rabbits is moved up to 1 space a random x,y
@@ -241,6 +227,80 @@ void GameEngine::spawnRabbits() {
  with the new location as well
  • Make sure you set the Rabbit object’s previous location in the field to
  nullptr if it has moved to a new location*/
-//void GameEngine::moveRabbits() {
+void GameEngine::moveRabbits() {
+	int rabbits_spawned = rabbits.size();
+	//vector<Creature> move_position;//x=-1,y=-1 indicates move forefeit
 
-//}
+	/*
+	moving can't be done immediately as next rabbits move might get affected.
+	all rabits move should depend on current snapshot of grid.
+	so plan moves first for each rabbit and execute later
+	*/
+
+	//plan moves
+	for(int i=0;i<rabbits_spawned;i++){
+		//try to move each rabbit
+
+		int current_x, current_y, potential_x, potential_y;
+		current_x = rabbits[i]->getX();
+		current_y = rabbits[i]->getY();
+		potential_x = current_x;
+		potential_y = current_y;
+
+		while((potential_x ==current_x )&&(potential_y ==current_y)){	//random number cant be same as current location
+			potential_x = get_random_number(current_x-1, current_x+1);
+			potential_y = get_random_number(current_y-1, current_y+1);
+		}
+
+		//cout<<"rabbit "<<i<<" ->curr:"<<current_x<<","<<current_y<<" pot:"<<potential_x<<","<<potential_y<<endl;
+
+		if(potential_x >= 0 && potential_x < width  && potential_y >= 0 && potential_y < height){
+			//all good-we got next location
+			Veggie *veggie_to_eat = nullptr;
+			veggie_to_eat = dynamic_cast<Veggie*>(grid[potential_y][potential_x]);
+
+			if (grid[potential_y][potential_x]) {
+				//something is there
+				if(veggie_to_eat){
+					//TODO:look into what remove means here
+					grid[potential_y][potential_x] = rabbits[i];
+					rabbits[i]->setX(potential_x);
+					rabbits[i]->setY(potential_y);
+					grid[current_y][current_x] = nullptr;
+				}
+				else{
+					//its another rabbit or Captain-forfeit move
+					//cout<<i<<" forfit Rabbit/captain "<<potential_x<<"  "<<potential_y<<endl;
+				}
+			}
+			else{
+				//nothing is here- so rabbit can move here
+				grid[potential_y][potential_x] = rabbits[i];
+				rabbits[i]->setX(potential_x);
+				rabbits[i]->setY(potential_y);
+				grid[current_y][current_x] = nullptr;
+			}
+		}
+		else{
+			//rabbit tried to move out of grid. move forfeited
+			//cout<<i<<" forfit out of grid "<<potential_x<<"  "<<potential_y<<endl;
+		}
+	}
+}
+
+
+/*Define the function gameOver() such that:
+The player is informed the game is over
+The names of all of the vegetables the Captain object harvested are output
+The player’s score is output
+Remember that you are informing the user about the game, so be sure to include
+appropriate messages and descriptions*/
+
+void GameEngine::gameOver() {
+	this->printField();
+	cout<<"GAME OVER!\nYou managed to harvest the following vegetables:"<<endl;
+	for(int i=0;i<captain->Veggies.size();i++){
+		cout<<captain->Veggies[i]->getName()<<endl;
+	}
+	cout<<"Your Score was: "<<score<<endl;
+}
