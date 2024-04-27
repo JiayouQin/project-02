@@ -6,13 +6,14 @@ Declarations for public functions named getScore() and remainingVeggies() that t
 
 Appropriate header guards
 */
-#ifndef GAMEENGINE_H
-#define GAMEENGINE_H
+#ifndef GAME_ENGINE_H
+#define GAME_ENGINE_H
 #include <vector>
 #include "getRandom.h"
-#include "Veggie.h"
 #include "FieldInhabitant.h"
-#include"Rabbit.h"
+#include "Veggie.h"
+#include "Rabbit.h"
+#include "Snake.h"
 
 
 
@@ -30,6 +31,8 @@ class GameEngine {
 
 	std::vector<Rabbit*> rabbit;/* A vector of Rabbit pointers to store the rabbit objects*/
 	std::vector<Veggie*> vegetables;//A vector of Veggie pointers to store all of the possible vegetable objects
+	Snake* snake;
+	std::vector < std::pair<void(*)(void*),void*> > callbackList;// contains a list of callback functions which will be called during the game.
 	//Declarations for private functions named initVeggies(), initCaptain(), and spawnRabbits() that take in no parameters and return nothing
 	void initVeggies();
 	void initCaptain() {};
@@ -37,15 +40,21 @@ class GameEngine {
 	//Declarations for private functions named moveCptVertical() and moveCptHorizontal() that take in an integer representing the movement of the captain as a parameter and return nothing
 	//void moveCptVertical();
 	//void moveCptHorizontal();
+	
 public:
 	//Declarations for public functions named initializeGame(), intro(), printField(), moveRabbits(), moveCaptain(), 
 	//and gameOver() that take in no parameters and return nothing
+	std::vector<std::pair<int, int>> getEmptyFields();
 	void initializeGame();
 	void printField();
 	void moveRabbits();
 	//void moveCaptain();
 	//void gameOver();
 	int remainingVeggies();
+	void gameIteration();
+	void initSnake();
+	void moveSanke();
+	bool addCallback(void (*func)(void*),void* instance);
 };
 
 

@@ -1,4 +1,6 @@
 #pragma once
+#ifndef GET_RANDOM_H
+#define GET_RANDOM_H
 #include <random>
 #include <ctime>
 #include <algorithm>
@@ -22,4 +24,4 @@ public:
 	}
 };
 	
-
+#endif

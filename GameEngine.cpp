@@ -4,12 +4,59 @@
 #include <sstream>
 #include <iostream>
 
+
+void GameEngine::initSnake() {
+	auto v = getEmptyFields();
+	randomGenerator.shuffleVector(v);
+	snake = new Snake(v[0].first,v[0].second);
+}
+
+void GameEngine::moveSanke() {
+	std::pair<int, int> m[4] = { {0,-1},{0,1},{-1,0},{1,0} }; //4 directions
+
+	for (auto& pair : m) {
+		int x = snake->getX() + m->first; int y = snake->getY() + m->second;
+		if (grid[y][x]) continue; //if not empty
+		//if captain.pos - snake.pos
+
+	}
+}
+
+
+bool GameEngine::addCallback(void(*func)(void*),void* instance) {
+	callbackList.push_back({ func, instance });
+	return true;
+}
+
+
 void GameEngine::initializeGame() {
-	initCaptain();
+	//Test callback, idea is that once registered a callback procedure can be ignored
+
 	initVeggies();
+	initCaptain();
 	spawnRabbits();
+	initSnake();
 	score = 0;
 }
+
+void GameEngine::gameIteration() {
+	for (auto& callback : callbackList) {
+		callback.first(callback.second);
+	}
+}
+
+// return current empty field a pair in x,y format
+std::vector<std::pair<int,int>> GameEngine::getEmptyFields() {
+	std::vector<std::pair<int, int>> emptySlot;
+	for (int i = 0; i < h; i++) {
+		for (int j = 0; j < w; j++) {
+			if (grid[i][j]) continue;	//guard case
+			emptySlot.push_back({ j,i });
+		}
+	}
+	return emptySlot;
+}
+
 
 /*
  The user is prompted for the name of the veggie file, and if the user’s file name doesn’t exist, repeatedly prompts for a new file name until a file that does exist is provided
@@ -86,6 +133,7 @@ void GameEngine::initVeggies() {
 }
 
 void GameEngine::printField() {
+	//This needs to be updated
 	using namespace std;
 	string symbolBuf;
 	for (int j = 0; j <= w; j++)

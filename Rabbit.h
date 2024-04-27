@@ -7,6 +7,7 @@
 
 
 #include <iostream>
+#include "Creature.h"
 using namespace std;
 
 
