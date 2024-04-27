@@ -1,28 +1,39 @@
-#define DEBUG
-#include "GameEngine.h"
+#include "gameEngine.h"
 #include <fstream>
 #include <sstream>
 #include <iostream>
 
+#define COLOR_DEFINED
+#ifdef COLOR_DEFINED
+#define RED "\e[0;31m"
+#define GRN "\e[0;32m"
+#define YEL "\e[0;33m"
+#define BLU "\e[0;34m"
+#define MAG "\e[0;35m"
+#define CYN "\e[0;36m"
+#define RST "\e[0m"
+#endif
+
 void GameEngine::initializeGame() {
-	initCaptain();
+	srand(time(0));
 	initVeggies();
-	spawnRabbits();
+	initCaptain();
+	//spawnRabbits();printField();spawnRabbits();printField();
 	score = 0;
-	//gameOver();
+	timer = 0;
 }
 
 /*
- The user is prompted for the name of the veggie file, and if the user’s file name doesn’t exist, repeatedly prompts for a new file name until a file that does exist is provided
- The height and width of the field should be read in and stored in the appropriate member variables
- The remaining lines in the files should be used to create new Veggie objects that are added to the vector of possible vegetables
- Generate the 2D, dynamic array of FieldInhabitant pointers of the dimensions specified in the file
- All slots should be initialized to nullptr
- The field should be populated with NUMBEROFVEGGIES number of new Veggie objects, located at random locations in the field
- If a chosen random location is occupied by another Veggie object, repeatedly choose a new location until an empty location is found
- Make sure you seed your random number generator to have new random fields each time you play the game
- Do not forget to close your file after you are done reading from it!
- */
+The user is prompted for the name of the veggie file, and if the user’s file name doesn’t exist, repeatedly prompts for a new file name until a file that does exist is provided
+The height and width of the field should be read in and stored in the appropriate member variables
+The remaining lines in the files should be used to create new Veggie objects that are added to the vector of possible vegetables
+Generate the 2D, dynamic array of FieldInhabitant pointers of the dimensions specified in the file
+All slots should be initialized to nullptr
+The field should be populated with NUMBEROFVEGGIES number of new Veggie objects, located at random locations in the field
+If a chosen random location is occupied by another Veggie object, repeatedly choose a new location until an empty location is found
+Make sure you seed your random number generator to have new random fields each time you play the game
+Do not forget to close your file after you are done reading from it!
+*/
 void GameEngine::initVeggies() {
 	using namespace std;
 	ifstream f;
@@ -161,31 +172,27 @@ void GameEngine::printField() {
 
 }
 
-int GameEngine::remainingVeggies() {
-	int remainingVeggies = 0;
-	for (int i = 0; i < height; i++) {
-		for (int j = 0; j < width; j++) {
-			FieldInhabitant* &ptr = grid[i][j];
-			if (!ptr)
-				continue;
-			else {
-				if (dynamic_cast<Veggie*>(ptr))
-					remainingVeggies++;
-			}
+void GameEngine::initCaptain() {
+	bool captain_planted = false;
+	while (captain_planted != true) {
+
+		int random_x;
+		int random_y;
+
+		random_x = get_random_number(0, width - 1);
+		random_y = get_random_number(0, height - 1);
+
+		if (grid[random_y][random_x] == nullptr) {
+			this->captain = new Captain(random_x, random_y);
+			grid[random_y][random_x] = captain;
+			captain_planted = true;
+		} else {
+			continue;
 		}
+
 	}
-	return remainingVeggies;
 
 }
-
-/*Define the function spawnRabbits() such that:
- If the current number of rabbits is less than MAXNUMBEROFRABBITS, a random
- location is chosen for a Rabbit object
- • If a chosen random location is occupied by another object, repeatedly choose a
- new location until an empty location is found
- • A new Rabbit object is created using the random location and the object is
- added to the member variable vector of rabbits and assigned to the random
- location in the field*/
 
 void GameEngine::spawnRabbits() {
 
@@ -211,22 +218,140 @@ void GameEngine::spawnRabbits() {
 	}
 	cout<<endl<<"there are "<<rabbits.size()<<" rabbits"<<endl;
 }
-/*Define the function moveRabbits() such that:
- Each Rabbit object in the vector of rabbits is moved up to 1 space a random x,y
- direction
- • Thus, the rabbit could move 1 space up, down, left, right, any diagonal direction,
- or possibly not move at all
- • If a Rabbit object attempts to move outside the boundaries of field it will
- forfeit its move
- • If a Rabbit object attempts to move into a space occupied by another Rabbit
- object or a Captain object it will forfeit its move
- • If a Rabbit object moves into a space occupied by a Veggie object, that
- Veggie object is removed from field, and the Rabbit object will take its
- place in field
- • Note that Rabbit object’s appropriate member variables should be updated
- with the new location as well
- • Make sure you set the Rabbit object’s previous location in the field to
- nullptr if it has moved to a new location*/
+
+void GameEngine::moveCptVertical(int shift_value) {
+	if(shift_value == -1 || shift_value == 1){
+		//trying to move up or down-w/s
+
+		int current_x = this->captain->getX();
+		int current_y = this->captain->getY();
+
+		int potential_x = current_x;
+		int potential_y = current_y + shift_value;
+
+
+		Veggie* veggie_to_collect = nullptr;
+		veggie_to_collect = dynamic_cast<Veggie*>(grid[potential_y][potential_x]);
+
+		Rabbit* rabbit_to_kill =nullptr;
+		rabbit_to_kill = dynamic_cast<Rabbit*>(grid[potential_y][potential_x]);
+
+		if (grid[potential_y][potential_x] == nullptr) {
+			//update grid
+			grid[current_y][current_x] = nullptr;
+			grid[potential_y][potential_x] = (FieldInhabitant*) captain;
+			//tell captain he/she has moved
+			captain->setX(potential_x);
+			captain->setY(potential_y);	//captain updated his position
+
+		} else if (veggie_to_collect) {
+			//cast was success-captain would land on a veggie position
+			captain->setX(potential_x);
+			captain->setY(potential_y);
+			captain->addVeggie((Veggie*) grid[potential_y][potential_x]);//static cast as veggie and collect
+			cout << "Yummy! A delicious " << veggie_to_collect->getName() << endl;
+			score = score + veggie_to_collect->getScorePoint();
+			grid[current_y][current_x] = nullptr;
+			grid[potential_y][potential_x] = (FieldInhabitant*) captain;
+		}
+		else if (rabbit_to_kill) {
+			//cast was success-captain would kill rabbit
+			captain->setX(potential_x);
+			captain->setY(potential_y);
+			cout << "Finally got one of those pesky bunnies!" << endl;
+
+			//find and kill rabbit from vector
+			for (int i = 0; i < rabbits.size(); i++) {
+				if (rabbits[i] == rabbit_to_kill) {
+					rabbits.erase(rabbits.begin() + i);
+					break;
+				}
+			}
+
+			score = score + RABBITPOINTS;
+
+			grid[current_y][current_x] = nullptr;
+			grid[potential_y][potential_x] = (FieldInhabitant*) captain;
+		}
+	}
+}
+
+void GameEngine::moveCptHorizontal(int shift_value) {
+	if (shift_value == -1 || shift_value == 1) {
+		//trying to right/left-d/a
+
+		int current_x = this->captain->getX();
+		int current_y = this->captain->getY();
+
+		int potential_x = current_x + shift_value;
+		int potential_y = current_y;
+
+		Veggie *veggie_to_collect = nullptr;
+		veggie_to_collect = dynamic_cast<Veggie*>(grid[potential_y][potential_x]);
+
+		Rabbit *rabbit_to_kill = nullptr;
+		rabbit_to_kill = dynamic_cast<Rabbit*>(grid[potential_y][potential_x]);
+
+		if (grid[potential_y][potential_x] == nullptr) {
+			//update grid
+			grid[current_y][current_x] = nullptr;
+			grid[potential_y][potential_x] = (FieldInhabitant*) captain;
+			//tell captain he/she has moved
+			captain->setX(potential_x);
+			captain->setY(potential_y);	//captain updated his position
+
+		} else if (veggie_to_collect) {
+			//cast was success-captain would land on a veggie position
+			captain->setX(potential_x);
+			captain->setY(potential_y);
+			captain->addVeggie((Veggie*) grid[potential_y][potential_x]);//static cast as veggie and collect
+			cout << "Yummy! A delicious " << veggie_to_collect->getName() << endl;
+			score = score + veggie_to_collect->getScorePoint();
+			grid[current_y][current_x] = nullptr;
+			grid[potential_y][potential_x] = (FieldInhabitant*) captain;
+		} else if (rabbit_to_kill) {
+			//cast was success-captain would kill rabbit
+			captain->setX(potential_x);
+			captain->setY(potential_y);
+			cout << "Finally got one of those pesky bunnies!" << endl;
+
+			//find and kill rabbit from vector
+			for (int i = 0; i < rabbits.size(); i++) {
+				if (rabbits[i] == rabbit_to_kill) {
+					rabbits.erase(rabbits.begin() + i);
+					break;
+				}
+			}
+
+			score = score + RABBITPOINTS;
+
+			grid[current_y][current_x] = nullptr;
+			grid[potential_y][potential_x] = (FieldInhabitant*) captain;
+		}
+	}
+}
+
+void GameEngine::intro() {
+	cout<<"Welcome to Captain Veggie!"<<endl;
+	cout<<"The rabbits are invading your garden and you must harvest"<<endl;
+	cout<<"as many vegetables as possible before the rabbits eat them"<<endl;
+	cout<<"all! Each vegetable is worth a different number of points"<<endl;
+	cout<<"so go for the high score!"<<endl;
+
+	//list all veggies
+	cout<<endl<<"The vegetables are:"<<endl;
+	for(long long unsigned int i=0;i<this->vegetables.size();i++){
+		cout<<vegetables[i]->getSymbol()<<":"<<vegetables[i]->getName()<<", "<<vegetables[i]->getScorePoint()<<endl;
+	}
+
+	cout<<endl<<"Captain Veggie is "<<captain->getSymbol()<<" , and the rabbits are R"<<endl<<endl;
+
+	cout<<"Catching a rabbit is worth 5 points, but more are"<<endl;
+	cout<<"always on the way!"<<endl;
+
+	cout<<endl<<"Good luck!"<<endl;
+}
+
 void GameEngine::moveRabbits() {
 	int rabbits_spawned = rabbits.size();
 	//vector<Creature> move_position;//x=-1,y=-1 indicates move forefeit
@@ -288,13 +413,86 @@ void GameEngine::moveRabbits() {
 	}
 }
 
+void GameEngine::moveCaptain() {
+	string action;
+	cout<<"Would you like to move up(W), down(S), left(A), or right(D):";
+	cin>>action;
 
-/*Define the function gameOver() such that:
-The player is informed the game is over
-The names of all of the vegetables the Captain object harvested are output
-The player’s score is output
-Remember that you are informing the user about the game, so be sure to include
-appropriate messages and descriptions*/
+	if(action.length() >1){
+		cout << action << " is not a valid option!" << endl << endl;
+		return;
+	}
+	//action[0]='w';
+	switch(action[0]){
+
+		case 'W':
+		case 'w': {
+			if(captain->getY() == 0){
+				//cant go any further up
+				cout<<"You can't move that way!"<<endl;
+			}
+			else{
+				moveCptVertical(-1);		//up
+			}
+			break;
+		}
+
+		case 'S':
+		case 's': {
+			if(captain->getY() == (this->height-1)){
+				//cant go any further down. already at last y
+				cout<<"You can't move that way!"<<endl;
+			}
+			else{
+				moveCptVertical(1);	//down
+			}
+			break;
+		}
+
+		case 'A':
+		case 'a': {
+
+			if(captain->getX() == 0){
+				//cant go any further left. already at last x
+				cout<<"You can't move that way!"<<endl;
+			}
+			else{
+				moveCptHorizontal(-1);	//left
+			}
+			break;
+		}
+
+		case 'D':
+		case 'd': {
+
+			if(captain->getX() == (this->width - 1)){
+				//cant go any further left. already at last x
+				cout<<"You can't move that way!"<<endl;
+			}
+			else{
+				moveCptHorizontal(1);	//right
+			}
+			break;
+		}
+
+		default: {
+			cout << action << " is not a valid option!" << endl << endl;
+		}
+
+	}
+}
+
+void GameEngine::timerTick() {
+	static int rabbits_spawned_ever=0;
+	if(timer%5 == 0){
+		//TODO: Confirm if 5 rabits can exist at any given moment or upto 5 could exist ever?
+		if(rabbits_spawned_ever!=MAXNUMBEROFRABBITS){
+			spawnRabbits();
+			rabbits_spawned_ever++;
+		}
+	}
+	timer++;
+}
 
 void GameEngine::gameOver() {
 	this->printField();
@@ -303,4 +501,25 @@ void GameEngine::gameOver() {
 		cout<<captain->Veggies[i]->getName()<<endl;
 	}
 	cout<<"Your Score was: "<<score<<endl;
+}
+
+int GameEngine::getScore() {
+	return this->score;
+}
+
+int GameEngine::remainingVeggies() {
+	int remainingVeggies = 0;
+	for (int i = 0; i < height; i++) {
+		for (int j = 0; j < width; j++) {
+			FieldInhabitant* &ptr = grid[i][j];
+			if (!ptr)
+				continue;
+			else {
+				if (dynamic_cast<Veggie*>(ptr))
+					remainingVeggies++;
+			}
+		}
+	}
+	return remainingVeggies;
+
 }
