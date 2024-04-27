@@ -13,10 +13,13 @@ void GameEngine::initSnake() {
 
 void GameEngine::moveSanke() {
 	std::pair<int, int> m[4] = { {0,-1},{0,1},{-1,0},{1,0} }; //4 directions
+	std::vector<std::pair<int, int>> moves = { {0,0} };
 
 	for (auto& pair : m) {
 		int x = snake->getX() + m->first; int y = snake->getY() + m->second;
+		if (x<0 || x>w || y<0 || y>h) continue;
 		if (grid[y][x]) continue; //if not empty
+		moves.push_back({x,y});
 		//if captain.pos - snake.pos
 
 	}
@@ -114,7 +117,6 @@ void GameEngine::initVeggies() {
 	for (int i = 0; i < h * w; i++) {
 		v.push_back(i);
 	}
-
 	randomGenerator.shuffleVector(v);
 
 	//initialize the array with null pointer!
@@ -123,7 +125,7 @@ void GameEngine::initVeggies() {
 		int x = v[i] % w;
 		grid[y][x] = nullptr;
 	}
-	for (int i = 0; i < NUMBEROFVEGGIES; i++) {
+	for (int i = 0; i <= NUMBEROFVEGGIES; i++) {
 		int y = v[i] / w;
 		int x = v[i] % w;
 		int idx = i % vegetables.size();
