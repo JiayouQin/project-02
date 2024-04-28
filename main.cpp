@@ -1,5 +1,3 @@
-#define DEBUG
-
 #include "gameEngine.h"
 using namespace std;
 int main() {
@@ -12,10 +10,8 @@ int main() {
 		engine.timerTick();
 	}
 	engine.gameOver();
-	string buf;
-	getline(cin, buf);
-	fflush(stdin);
-	cin.clear();
+	
+
 	return 0;
 
 }

@@ -31,7 +31,6 @@ private:
 
 	int height;
 	int width;
-	int score;
 	int timer;
 	std::thread* t;
 
@@ -51,7 +50,6 @@ private:
 	bool moveCptXY(int, int);
 	bool moveCptVertical(int);
 	bool moveCptHorizontal(int);
-	void initSoundThread();
 
 	cv::Mat canvas;
 	cv::Mat snakeSprite;
@@ -63,9 +61,11 @@ private:
 public:
 	std::string isOver = "";
 	int snakeHibernation = 0;
-	int rabbitsKilled = false;
+	int rabbitsKilled = 0;
+	bool singleRabbitKilled = false;
 	void initSnake();
 	void moveSnake();
+	void resetSnake();
 	void initializeGame();
 	void intro();
 	void printField();

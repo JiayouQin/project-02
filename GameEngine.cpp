@@ -15,16 +15,9 @@
 #define RST "\e[0m"
 #endif
 
-static void playSound() {
-	PlaySound(TEXT("assets/theme.wav"), NULL, SND_FILENAME | SND_ASYNC | SND_LOOP | SND_NOSTOP);
-}
-
-void GameEngine::initSoundThread() {
-	t = new std::thread(playSound);
-}
-
 //return empty grid in x,y format
 std::vector<std::pair<int, int>> GameEngine::getEmptyGrid() {
+	PlaySound(TEXT("assets/theme.wav"), NULL, SND_FILENAME | SND_ASYNC | SND_LOOP | SND_NOSTOP);
 	std::vector<std::pair<int, int>> emptyGrid;
 	for (int y = 0; y < height; y++) {
 		for (int x = 0; x < width; x++) {
@@ -39,21 +32,31 @@ void GameEngine::initializeGame() {
 	
 	srand(time(0));
 	initVeggies();
+	cv::resize(cv::imread("assets/snake.png"), snakeSprite, cv::Size(50, 50));
 	canvas = cv::Mat(height * 50, width * 50, CV_8UC3, cv::Scalar(0, 0, 0));
 	initCaptain();
 	initSnake();
 	cv::resize(cv::imread("assets/rabbit.png"), rabbitSprite, cv::Size(50, 50));
-	score = 0;
 	timer = 0;
 }
 
 void GameEngine::initSnake() {
-	cv::resize(cv::imread("assets/snake.png"), snakeSprite, cv::Size(50, 50));
 	auto emptyGrid = getEmptyGrid();
 	randomGenerator.shuffleVector(emptyGrid);
 	int x = emptyGrid[0].first; int y = emptyGrid[1].second;
 	snake = new Snake(x,y);
 	grid[y][x] = snake;
+}
+
+void GameEngine::resetSnake() {
+	std::cout << "unfortunately the captain is bitten by a snake" << std::endl;
+	auto emptyGrid = getEmptyGrid();
+	randomGenerator.shuffleVector(emptyGrid);
+	int x = emptyGrid[0].first; int y = emptyGrid[1].second;
+	grid[snake->getY()][snake->getX()] = nullptr;
+	grid[y][x] = snake;
+	snake->setX(x);
+	snake->setY(y);
 }
 
 void GameEngine::moveSnake() {
@@ -70,6 +73,7 @@ void GameEngine::moveSnake() {
 		y = snake->getY() + p.second;
 		if (x < 0 || x >= width || y < 0 || y >= height) continue;
 		if (dynamic_cast<Veggie*>(grid[y][x])) continue;
+		if (dynamic_cast<Rabbit*>(grid[y][x])) continue; // does not move into rabbits
 		potentialMoves.push_back({ x,y });
 	}
 	vector<int> distance;
@@ -82,21 +86,27 @@ void GameEngine::moveSnake() {
 	int tX = chosen.first; int tY = chosen.second;
 
 	if (dynamic_cast<Captain*>(grid[tY][tX])) { 
-		isOver = "Bitten by a snake"; 
+		for (int i = 0; i < 5; i++) {
+			if (!captain->Veggies.size()) break;
+			cout << captain->Veggies.back()->getName() << " is lost" << endl;
+			captain->Veggies.pop_back();
+		}
+		resetSnake();
 		return;
 	}
-	Rabbit* rabbitPtr = dynamic_cast<Rabbit*>(grid[tY][tX]);
-	if (rabbitPtr) {
-		for (int i = 0; i < rabbits.size(); i++) {
-			if (rabbits[i] == rabbitPtr) {
-				Rabbit* ptr = rabbits[i];
-				rabbits.erase(rabbits.begin() + i);
-				delete ptr;
-				snakeHibernation = 5;
-				break;
-			}
-		}
-	}
+	//unused
+	//Rabbit* rabbitPtr = dynamic_cast<Rabbit*>(grid[tY][tX]);
+	//if (rabbitPtr) {
+	//	for (int i = 0; i < rabbits.size(); i++) {
+	//		if (rabbits[i] == rabbitPtr) {
+	//			Rabbit* ptr = rabbits[i];
+	//			rabbits.erase(rabbits.begin() + i);
+	//			delete ptr;
+	//			snakeHibernation = 5;
+	//			break;
+	//		}
+	//	}
+	//}
 	grid[snake->getY()][snake->getX()] = nullptr;
 	snake->setX(tX); snake->setY(tY);
 	grid[tY][tX] = snake;
@@ -122,15 +132,9 @@ void GameEngine::initVeggies() {
 	string symbolTemp;
 	int scoreTemp;
 	while (!f.is_open()) {
-//#define DEBUG
-#if DEBUG
 		cout << "Please enter the name of the vegetable point file: " << endl;
 		cin >> buf;
 		f.open(buf);
-#else
-		f.open("VeggieFile1.csv");
-#endif
-
 	}
 	int i = 0;
 	vegetables.clear();
@@ -297,10 +301,8 @@ bool GameEngine::moveCptXY(int shiftX, int shiftY) {
 	int potential_y = current_y + shiftY;
 	if (0 > potential_x || potential_x >= width) { return false; }
 	if (0 > potential_y || potential_y >= height) { return false; }
-	Veggie* veggie_to_collect = nullptr;
-	veggie_to_collect = dynamic_cast<Veggie*>(grid[potential_y][potential_x]);
-	Rabbit* rabbit_to_kill =nullptr;
-	rabbit_to_kill = dynamic_cast<Rabbit*>(grid[potential_y][potential_x]);
+	Veggie* veggie_to_collect = dynamic_cast<Veggie*>(grid[potential_y][potential_x]);
+	Rabbit* rabbit_to_kill = dynamic_cast<Rabbit*>(grid[potential_y][potential_x]);
 
 	if (grid[potential_y][potential_x] == nullptr) {
 		//update grid
@@ -316,7 +318,6 @@ bool GameEngine::moveCptXY(int shiftX, int shiftY) {
 		captain->setY(potential_y);
 		captain->addVeggie((Veggie*) grid[potential_y][potential_x]);//static cast as veggie and collect
 		std::cout << "Yummy! A delicious " << veggie_to_collect->getName() << std::endl;
-		score = score + veggie_to_collect->getScorePoint();
 		grid[current_y][current_x] = nullptr;
 		grid[potential_y][potential_x] = (FieldInhabitant*) captain;
 	}
@@ -325,7 +326,7 @@ bool GameEngine::moveCptXY(int shiftX, int shiftY) {
 		captain->setX(potential_x);
 		captain->setY(potential_y);
 		grid[captain->getY()][captain->getX()] = captain;
-		rabbitsKilled = true;
+		singleRabbitKilled = true;
 		//find and kill rabbit from vector
 		for (int i = 0; i < rabbits.size(); i++) {
 			if (rabbits[i] == rabbit_to_kill) {
@@ -335,7 +336,7 @@ bool GameEngine::moveCptXY(int shiftX, int shiftY) {
 				break;
 			}
 		}
-		score += RABBITPOINTS;
+		rabbitsKilled ++;
 		grid[current_y][current_x] = nullptr;
 		grid[potential_y][potential_x] = captain;
 	}
@@ -412,8 +413,8 @@ bool GameEngine::moveCaptain() {
 	int ret = false;
 	char action;
 	string buffer;
+	cout << "Would you like to move up(W), down(S), left(A), or right(D):" << endl;
 #ifndef GUI_MODE
-	cout<<"Would you like to move up(W), down(S), left(A), or right(D):";
 	cin >> action;
 	getline(cin, buffer);
 #else
@@ -457,16 +458,15 @@ void GameEngine::timerTick() {
 		isOver = "No veggie left";
 		return;
 	}
-	system("cls");
-	if (rabbitsKilled) {
-		rabbitsKilled = false;
+	if (singleRabbitKilled) {
+		singleRabbitKilled = false;
 		cout << "finally got one of these pesky rabbits" << endl;
 	}
 	if(timer%5 == 0 && timer != 0){
 		if(rabbits.size() < MAXNUMBEROFRABBITS) spawnRabbits();
 	}
 	timer++;
-	cout << remainingVeggies() << " Veggies remaining. Current Score: " << getScore() << endl;
+	cout << remainingVeggies() << " Veggies remaining. Current Score: " << getScore() << " rabbits killed: " << rabbitsKilled << endl;
 	bool ret = false;
 
 	printField();
@@ -480,27 +480,33 @@ void GameEngine::timerTick() {
 
 void GameEngine::gameOver() {
 	using namespace std;
-	system("cls");
 	this->printField();
 	cout << isOver << endl;
 	cout<<"GAME OVER!\nYou managed to harvest the following vegetables:"<<endl;
 	for(int i=0;i<captain->Veggies.size();i++){
 		cout<<captain->Veggies[i]->getName()<<endl;
 	}
-	cout<<"Your Score was: "<<getScore() << endl;
-	if (isOver == "Bitten by a snake") {
-		PlaySound(TEXT("assets/gameOver.wav"), NULL, SND_ASYNC );
-	}
-	else {
+	cout<<"Your Score was: "<< getScore() << " rabbits killed: " << rabbitsKilled << endl;
+	if (remainingVeggies() == 0) {
 		PlaySound(TEXT("assets/complete.wav"), NULL, SND_ASYNC );
 	}
+	else {
+		PlaySound(TEXT("assets/gameOver.wav"), NULL, SND_ASYNC );
+	}
 #ifdef GUI_MODE
+	cv::waitKey();
 	cv::destroyAllWindows();
 #endif
 }
 
 int GameEngine::getScore() {
-	return this->score;
+	int score = 0;
+	for (auto& v : captain->Veggies) {
+		score += v->getScorePoint();
+	}
+	score += 5 * rabbitsKilled;
+	return score;
+
 }
 
 int GameEngine::remainingVeggies() {
