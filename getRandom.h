@@ -5,6 +5,7 @@
 #include <ctime>
 #include <algorithm>
 #include <vector>
+#include <iostream>
 
 
 class RandomGenerator {
@@ -16,7 +17,7 @@ public:
 	//@param lb lower bound
 	//@param ub upper bound
 	static int getRandomInt(int lb, int ub) {
-		return lb + rand() % (ub - lb);
+		return lb + rand() % (ub+1 - lb);
 	}
 	template<typename T>
 	static void shuffleVector(std::vector<T>& v) {
