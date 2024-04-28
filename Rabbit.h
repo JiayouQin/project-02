@@ -8,8 +8,6 @@
 
 #include <iostream>
 #include "Creature.h"
-using namespace std;
-
 
 class Rabbit:public Creature{
 

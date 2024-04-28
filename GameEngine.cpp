@@ -2,6 +2,7 @@
 #include <fstream>
 #include <sstream>
 #include <iostream>
+#define GUI_MODE
 
 #define COLOR_DEFINED_
 #ifdef COLOR_DEFINED
@@ -13,6 +14,14 @@
 #define CYN "\e[0;36m"
 #define RST "\e[0m"
 #endif
+
+static void playSound() {
+	PlaySound(TEXT("assets/theme.wav"), NULL, SND_FILENAME | SND_ASYNC | SND_LOOP | SND_NOSTOP);
+}
+
+void GameEngine::initSoundThread() {
+	t = new std::thread(playSound);
+}
 
 //return empty grid in x,y format
 std::vector<std::pair<int, int>> GameEngine::getEmptyGrid() {
@@ -27,22 +36,19 @@ std::vector<std::pair<int, int>> GameEngine::getEmptyGrid() {
 }
 
 void GameEngine::initializeGame() {
-	auto mat = cv::imread("snake.png");
-	cv::Mat resized;
-	cv::resize(mat,resized,cv::Size(32,32));
-	cv::imshow("mat", resized);
-	cv::waitKey(0);
-
+	
 	srand(time(0));
 	initVeggies();
+	canvas = cv::Mat(height * 50, width * 50, CV_8UC3, cv::Scalar(0, 0, 0));
 	initCaptain();
 	initSnake();
-	//spawnRabbits();printField();spawnRabbits();printField();
+	cv::resize(cv::imread("assets/rabbit.png"), rabbitSprite, cv::Size(50, 50));
 	score = 0;
 	timer = 0;
 }
 
 void GameEngine::initSnake() {
+	cv::resize(cv::imread("assets/snake.png"), snakeSprite, cv::Size(50, 50));
 	auto emptyGrid = getEmptyGrid();
 	randomGenerator.shuffleVector(emptyGrid);
 	int x = emptyGrid[0].first; int y = emptyGrid[1].second;
@@ -51,6 +57,7 @@ void GameEngine::initSnake() {
 }
 
 void GameEngine::moveSnake() {
+	using namespace std;
 	if (snakeHibernation) {
 		snakeHibernation--;
 		return;
@@ -127,6 +134,7 @@ void GameEngine::initVeggies() {
 	}
 	int i = 0;
 	vegetables.clear();
+	
 	while (getline(f, buf)) {
 		//int i = 0;
 		stringstream ss(buf);
@@ -144,6 +152,9 @@ void GameEngine::initVeggies() {
 		getline(ss, buf, ',');
 		scoreTemp = stoi(buf);
 		vegetables.push_back(new Veggie(symbolTemp, nameTemp, scoreTemp));
+		cv::Mat temp;
+		cv::resize(cv::imread("assets/" + nameTemp + ".png"), temp, cv::Size(50, 50));
+		veggieSprites[nameTemp] = temp;
 		i++;
 	}
 	f.close();
@@ -152,7 +163,6 @@ void GameEngine::initVeggies() {
 	for (int i = 0; i < height; i++) {
 		grid[i] = new FieldInhabitant*[width];
 	}
-
 	vector <int> v;
 	for (int i = 0; i < height * width; i++) {
 		v.push_back(i);
@@ -176,6 +186,7 @@ void GameEngine::initVeggies() {
 
 }
 
+#ifndef GUI_MODE
 void GameEngine::printField() {
 	//cout << "remaining veggies: " << remainingVeggies() << endl;
 	using namespace std;
@@ -213,8 +224,35 @@ void GameEngine::printField() {
 	cout << endl;
 
 }
+#else
+void GameEngine::printField() {
+	using namespace std;
+	string buf;
+	canvas = cv::Scalar(255, 255, 255); //this clears the background
+	for (int i = 0; i < height; i++) {
+		for (int j = 0; j < width; j++) {
+			auto ptr = dynamic_cast<Veggie*>(grid[i][j]);
+			if (ptr) {
+				veggieSprites[ptr->getName()].copyTo(canvas(cv::Rect(50 * j, 50 * i, 50, 50)));
+				continue;
+			}
+		}
+	}
+	for (auto& rabbit : rabbits) {
+		rabbitSprite.copyTo(canvas(cv::Rect(50 * rabbit->getX(), 50 * rabbit->getY(), 50, 50)));
+	}
+	captainSprite.copyTo(canvas(cv::Rect(50 * captain->getX(), 50 * captain->getY(), 50, 50)));
+	snakeSprite.copyTo(canvas(cv::Rect(50 * snake->getX(), 50 * snake->getY(), 50, 50)));
+
+	cv::imshow("canvas", canvas);
+	cv::waitKey(50);
+
+
+}
+#endif
 
 void GameEngine::initCaptain() {
+	cv::resize(cv::imread("assets/captain.png"), captainSprite, cv::Size(50, 50));
 	bool captain_planted = false;
 	while (captain_planted != true) {
 		int random_x = randomGenerator.getRandomInt(0, width - 1);
@@ -232,6 +270,7 @@ void GameEngine::initCaptain() {
 }
 
 void GameEngine::spawnRabbits() {
+	using namespace std;
 	bool rabbit_planted = false;
 	vector<pair<int, int>> emptyGrid = getEmptyGrid();
 	randomGenerator.shuffleVector(emptyGrid);
@@ -276,7 +315,7 @@ bool GameEngine::moveCptXY(int shiftX, int shiftY) {
 		captain->setX(potential_x);
 		captain->setY(potential_y);
 		captain->addVeggie((Veggie*) grid[potential_y][potential_x]);//static cast as veggie and collect
-		cout << "Yummy! A delicious " << veggie_to_collect->getName() << endl;
+		std::cout << "Yummy! A delicious " << veggie_to_collect->getName() << std::endl;
 		score = score + veggie_to_collect->getScorePoint();
 		grid[current_y][current_x] = nullptr;
 		grid[potential_y][potential_x] = (FieldInhabitant*) captain;
@@ -304,6 +343,7 @@ bool GameEngine::moveCptXY(int shiftX, int shiftY) {
 }
 
 void GameEngine::intro() {
+	using namespace std;
 	cout<<"Welcome to Captain Veggie!"<<endl;
 	cout<<"The rabbits are invading your garden and you must harvest"<<endl;
 	cout<<"as many vegetables as possible before the rabbits eat them"<<endl;
@@ -325,6 +365,7 @@ void GameEngine::intro() {
 }
 
 void GameEngine::moveRabbits() {
+	using namespace std;
 	//vector<Creature> move_position;//x=-1,y=-1 indicates move forefeit
 
 	/*
@@ -367,13 +408,22 @@ void GameEngine::moveRabbits() {
 }
 
 bool GameEngine::moveCaptain() {
+	using namespace std;
 	int ret = false;
 	char action;
 	string buffer;
+#ifndef GUI_MODE
 	cout<<"Would you like to move up(W), down(S), left(A), or right(D):";
 	cin >> action;
 	getline(cin, buffer);
+#else
+	action = cv::waitKey(0);
+#endif
 	switch(action){
+		case 27: {
+			isOver = "player gave up";
+			return true;
+		}
 		case 'W':
 		case 'w': {
 			ret = moveCptVertical(-1);	//up
@@ -402,7 +452,11 @@ bool GameEngine::moveCaptain() {
 }
 
 void GameEngine::timerTick() {
-	if (remainingVeggies() == 0) isOver = "No veggie left";
+	using namespace std;
+	if (remainingVeggies() == 0) {
+		isOver = "No veggie left";
+		return;
+	}
 	system("cls");
 	if (rabbitsKilled) {
 		rabbitsKilled = false;
@@ -425,6 +479,7 @@ void GameEngine::timerTick() {
 }
 
 void GameEngine::gameOver() {
+	using namespace std;
 	system("cls");
 	this->printField();
 	cout << isOver << endl;
@@ -433,6 +488,15 @@ void GameEngine::gameOver() {
 		cout<<captain->Veggies[i]->getName()<<endl;
 	}
 	cout<<"Your Score was: "<<getScore() << endl;
+	if (isOver == "Bitten by a snake") {
+		PlaySound(TEXT("assets/gameOver.wav"), NULL, SND_ASYNC );
+	}
+	else {
+		PlaySound(TEXT("assets/complete.wav"), NULL, SND_ASYNC );
+	}
+#ifdef GUI_MODE
+	cv::destroyAllWindows();
+#endif
 }
 
 int GameEngine::getScore() {

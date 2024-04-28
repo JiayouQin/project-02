@@ -8,8 +8,12 @@ Appropriate header guards
 */
 #ifndef GAME_ENGINE_H
 #define GAME_ENGINE_H
+#include <windows.h>
+#pragma comment(lib, "winmm.lib")
 #include <opencv2/opencv.hpp>
+#include <thread>
 #include <vector>
+#include <map>
 #include "getRandom.h"
 #include "Veggie.h"
 #include "Captain.h"
@@ -29,6 +33,7 @@ private:
 	int width;
 	int score;
 	int timer;
+	std::thread* t;
 
 	const int NUMBEROFVEGGIES = 30; //Constant integers to store the initial number of vegetables in the game named NUMBEROFVEGGIES, initialized to 30, 
 	const int MAXNUMBEROFRABBITS = 5; //and the number of rabbits in the game named NUMBEROFRABBITS, initialized to 5
@@ -46,10 +51,13 @@ private:
 	bool moveCptXY(int, int);
 	bool moveCptVertical(int);
 	bool moveCptHorizontal(int);
+	void initSoundThread();
 
+	cv::Mat canvas;
 	cv::Mat snakeSprite;
 	cv::Mat captainSprite;
-	cv::Mat VeggieSprite;
+	cv::Mat rabbitSprite;
+	std::map<std::string,cv::Mat> veggieSprites;
 
 
 public:
