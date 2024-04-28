@@ -27,6 +27,12 @@ std::vector<std::pair<int, int>> GameEngine::getEmptyGrid() {
 }
 
 void GameEngine::initializeGame() {
+	auto mat = cv::imread("snake.png");
+	cv::Mat resized;
+	cv::resize(mat,resized,cv::Size(32,32));
+	cv::imshow("mat", resized);
+	cv::waitKey(0);
+
 	srand(time(0));
 	initVeggies();
 	initCaptain();
@@ -415,12 +421,7 @@ void GameEngine::timerTick() {
 		ret = moveCaptain();
 	}
 	moveSnake();
-
-	
-	
 	ret = false;
-	
-
 }
 
 void GameEngine::gameOver() {

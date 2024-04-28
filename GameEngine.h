@@ -8,13 +8,14 @@ Appropriate header guards
 */
 #ifndef GAME_ENGINE_H
 #define GAME_ENGINE_H
-
+#include <opencv2/opencv.hpp>
 #include <vector>
 #include "getRandom.h"
 #include "Veggie.h"
 #include "Captain.h"
 #include "Rabbit.h"
 #include "Snake.h"
+
 
 
 class GameEngine {
@@ -45,6 +46,11 @@ private:
 	bool moveCptXY(int, int);
 	bool moveCptVertical(int);
 	bool moveCptHorizontal(int);
+
+	cv::Mat snakeSprite;
+	cv::Mat captainSprite;
+	cv::Mat VeggieSprite;
+
 
 public:
 	std::string isOver = "";
