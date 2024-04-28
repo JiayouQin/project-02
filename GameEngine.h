@@ -6,21 +6,21 @@ Declarations for public functions named getScore() and remainingVeggies() that t
 
 Appropriate header guards
 */
-#ifndef GAMEENGINE_H
-#define GAMEENGINE_H
+#ifndef GAME_ENGINE_H
+#define GAME_ENGINE_H
 
 #include <vector>
 #include "getRandom.h"
 #include "Veggie.h"
-#include "FieldInhabitant.h"
 #include "Captain.h"
 #include "Rabbit.h"
+#include "Snake.h"
 
 
 class GameEngine {
 
 private:
-	//RandomGenerator randomGenerator;
+	RandomGenerator randomGenerator;
 
 	FieldInhabitant*** grid = nullptr;	// a 2D grid
 
@@ -33,52 +33,35 @@ private:
 	const int MAXNUMBEROFRABBITS = 5; //and the number of rabbits in the game named NUMBEROFRABBITS, initialized to 5
 
 	const int RABBITPOINTS = 5;
-
+	
 	Captain* captain;
+	Snake* snake;
 	std::vector<Rabbit*> rabbits;
-
 	std::vector<Veggie*> vegetables;//A vector of Veggie pointers to store all of the possible vegetable objects
 
 	void initVeggies();
 	void initCaptain();
 	void spawnRabbits();
-	void moveCptVertical(int something);
-	void moveCptHorizontal(int something);
+	bool moveCptXY(int, int);
+	bool moveCptVertical(int);
+	bool moveCptHorizontal(int);
 
 public:
-
+	std::string isOver = "";
+	int snakeHibernation = 0;
+	int rabbitsKilled = false;
+	void initSnake();
+	void moveSnake();
 	void initializeGame();
 	void intro();
 	void printField();
 	void moveRabbits();
-	void moveCaptain();
+	bool moveCaptain();
 	void timerTick();
 	void gameOver();
-
+	std::vector<std::pair<int, int>> getEmptyGrid();
 	int getScore();
 	int remainingVeggies();
-
-	static int get_random_number(int min, int max){
-
-		/*
-		int max_divisor=max+1; //eg.99->100
-		int random_number;
-
-		while(   (random_number=(rand() % max_divisor))    < min); //if generated number is less than min, try again
-
-		return random_number;
-		*/
-		int range = max - min + 1;  // Calculate the range
-		int random_number;
-
-		// Generate a random number in the range [0, range - 1]
-		random_number = rand() % range;
-
-		// Adjust the random number to be in the range [min, max]
-		random_number += min;
-
-		return random_number;
-	}
 };
 
 
