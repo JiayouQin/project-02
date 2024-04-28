@@ -6,6 +6,7 @@
 *.pdf
 *.txt
 *.csv
+*.mp3
 
 
 ## Ignore Visual Studio temporary files, build results, and
