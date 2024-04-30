@@ -42,7 +42,7 @@ void GameEngine::initializeGame() {
 
 void GameEngine::initSnake() {
 	auto emptyGrid = getEmptyGrid();
-	randomGenerator.shuffleVector(emptyGrid);
+	randomGenerator->shuffleVector(emptyGrid);
 	int x = emptyGrid[0].first; int y = emptyGrid[1].second;
 	snake = new Snake(x,y);
 	grid[y][x] = snake;
@@ -51,7 +51,7 @@ void GameEngine::initSnake() {
 void GameEngine::resetSnake() {
 	std::cout << "unfortunately the captain is bitten by a snake" << std::endl;
 	auto emptyGrid = getEmptyGrid();
-	randomGenerator.shuffleVector(emptyGrid);
+	randomGenerator->shuffleVector(emptyGrid);
 	int x = emptyGrid[0].first; int y = emptyGrid[1].second;
 	grid[snake->getY()][snake->getX()] = nullptr;
 	grid[y][x] = snake;
@@ -61,10 +61,7 @@ void GameEngine::resetSnake() {
 
 void GameEngine::moveSnake() {
 	using namespace std;
-	if (snakeHibernation) {
-		snakeHibernation--;
-		return;
-	}
+
 	pair<int, int> dPos[5] = { {1,0},{0,1},{-1,0},{0,-1}, }; //check 5 directions
 	std::vector<pair<int, int>> potentialMoves = { {snake->getX(), snake->getY()} };
 	int x, y;
@@ -171,7 +168,7 @@ void GameEngine::initVeggies() {
 	for (int i = 0; i < height * width; i++) {
 		v.push_back(i);
 	}
-	randomGenerator.shuffleVector(v);
+	randomGenerator->shuffleVector(v);
 
 	//initialize the array with null pointer!
 	for (int i = 0; i < height*width; i++) {
@@ -259,8 +256,8 @@ void GameEngine::initCaptain() {
 	cv::resize(cv::imread("assets/captain.png"), captainSprite, cv::Size(50, 50));
 	bool captain_planted = false;
 	while (captain_planted != true) {
-		int random_x = randomGenerator.getRandomInt(0, width - 1);
-		int random_y = randomGenerator.getRandomInt(0, height - 1);
+		int random_x = randomGenerator->getRandomInt(0, width - 1);
+		int random_y = randomGenerator->getRandomInt(0, height - 1);
 		if (grid[random_y][random_x] == nullptr) {
 			this->captain = new Captain(random_x, random_y);
 			grid[random_y][random_x] = captain;
@@ -277,7 +274,7 @@ void GameEngine::spawnRabbits() {
 	using namespace std;
 	bool rabbit_planted = false;
 	vector<pair<int, int>> emptyGrid = getEmptyGrid();
-	randomGenerator.shuffleVector(emptyGrid);
+	randomGenerator->shuffleVector(emptyGrid);
 	Rabbit* newRabbit = new Rabbit(emptyGrid[0].first, emptyGrid[0].second);
 	grid[emptyGrid[0].second][emptyGrid[0].first] = newRabbit;
 	rabbits.push_back(newRabbit);
@@ -377,7 +374,7 @@ void GameEngine::moveRabbits() {
 
 	//plan moves
 	for (auto& rabbit : rabbits) {
-		if (randomGenerator.getRandomInt(0, 3) == 1) {
+		if (randomGenerator->getRandomInt(0, 3) == 1) {
 			continue;
 		};
 		//try to move each rabbit
@@ -392,7 +389,7 @@ void GameEngine::moveRabbits() {
 			if (dynamic_cast<Rabbit*>(grid[y][x])) continue;
 			potentialMoves.push_back({ x,y });
 		}
-		randomGenerator.shuffleVector(potentialMoves);
+		randomGenerator->shuffleVector(potentialMoves);
 		x = potentialMoves[0].first;
 		y = potentialMoves[0].second;
 		Veggie* veggie_to_eat = nullptr;

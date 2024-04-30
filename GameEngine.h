@@ -10,7 +10,7 @@ Appropriate header guards
 #define GAME_ENGINE_H
 #include <windows.h>
 #pragma comment(lib, "winmm.lib")
-#include <opencv2/opencv.hpp>
+#include "opencv2/opencv.hpp"
 #include <thread>
 #include <vector>
 #include <map>
@@ -25,14 +25,13 @@ Appropriate header guards
 class GameEngine {
 
 private:
-	RandomGenerator randomGenerator;
+	RandomGenerator* randomGenerator = new RandomGenerator();
 
 	FieldInhabitant*** grid = nullptr;	// a 2D grid
 
 	int height;
 	int width;
 	int timer;
-	std::thread* t;
 
 	const int NUMBEROFVEGGIES = 30; //Constant integers to store the initial number of vegetables in the game named NUMBEROFVEGGIES, initialized to 30, 
 	const int MAXNUMBEROFRABBITS = 5; //and the number of rabbits in the game named NUMBEROFRABBITS, initialized to 5

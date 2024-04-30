@@ -21,7 +21,8 @@ public:
 	}
 	template<typename T>
 	static void shuffleVector(std::vector<T>& v) {
-		std::shuffle(std::begin(v), std::end(v), std::default_random_engine{});
+		std::random_shuffle(v.begin(), v.end());
+		//std::shuffle(std::begin(v), std::end(v), std::default_random_engine{});
 	}
 };
 	
