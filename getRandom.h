@@ -9,19 +9,21 @@
 
 
 class RandomGenerator {
-	
+
 public:
 	RandomGenerator() {
-		srand((unsigned)time(0));
+		srand((unsigned) time(0));
 	}
+
 	//@param lb lower bound
 	//@param ub upper bound
 	static int getRandomInt(int lb, int ub) {
-		return lb + rand() % (ub+1 - lb);
+		return lb + rand() % (ub + 1 - lb);
 	}
+
 	template<typename T>
-	static void shuffleVector(std::vector<T>& v) {
-		std::shuffle(std::begin(v), std::end(v), std::default_random_engine{});
+	static void shuffleVector(std::vector<T> &v) {
+		std::random_shuffle(v.begin(), v.end());
 	}
 };
 	

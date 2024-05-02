@@ -36,15 +36,15 @@ private:
 	
 	Captain* captain;
 	Snake* snake;
-	std::vector<Rabbit*> rabbits;
-	std::vector<Veggie*> vegetables;//A vector of Veggie pointers to store all of the possible vegetable objects
+	std::vector<Rabbit*> rabbits;	//A vector of Rabbit pointers that are alive and exist in game
+	std::vector<Veggie*> vegetables;//A vector of all possible Veggie pointers that could exist in game(not same as collected veggie)
 
 	void initVeggies();
 	void initCaptain();
 	void spawnRabbits();
-	bool moveCptXY(int, int);
-	bool moveCptVertical(int);
-	bool moveCptHorizontal(int);
+	void moveCptXY(int, int);
+	void moveCptVertical(int);
+	void moveCptHorizontal(int);
 
 public:
 	std::string isOver = "";
@@ -56,7 +56,7 @@ public:
 	void intro();
 	void printField();
 	void moveRabbits();
-	bool moveCaptain();
+	void moveCaptain();
 	void timerTick();
 	void gameOver();
 	std::vector<std::pair<int, int>> getEmptyGrid();

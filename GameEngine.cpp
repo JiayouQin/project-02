@@ -1,9 +1,10 @@
-#include "gameEngine.h"
+#include "GameEngine.h"
 #include <fstream>
 #include <sstream>
 #include <iostream>
 
-#define COLOR_DEFINED_
+#define COLOR_DEFINED
+
 #ifdef COLOR_DEFINED
 #define RED "\e[0;31m"
 #define GRN "\e[0;32m"
@@ -14,24 +15,29 @@
 #define RST "\e[0m"
 #endif
 
+#define DEBUG 0
+
 //return empty grid in x,y format
 std::vector<std::pair<int, int>> GameEngine::getEmptyGrid() {
 	std::vector<std::pair<int, int>> emptyGrid;
 	for (int y = 0; y < height; y++) {
 		for (int x = 0; x < width; x++) {
-			if (grid[y][x]) continue;
-			emptyGrid.push_back({ x,y });
+			if (grid[y][x]) {
+				continue;
+			} else {
+				emptyGrid.push_back( { x, y });
+			}
 		}
 	}
 	return emptyGrid;
 }
+
 
 void GameEngine::initializeGame() {
 	srand(time(0));
 	initVeggies();
 	initCaptain();
 	initSnake();
-	//spawnRabbits();printField();spawnRabbits();printField();
 	score = 0;
 	timer = 0;
 }
@@ -39,9 +45,10 @@ void GameEngine::initializeGame() {
 void GameEngine::initSnake() {
 	auto emptyGrid = getEmptyGrid();
 	randomGenerator.shuffleVector(emptyGrid);
-	int x = emptyGrid[0].first; int y = emptyGrid[1].second;
-	snake = new Snake(x,y);
-	grid[y][x] = snake;
+	int random_x = emptyGrid[0].first;
+	int random_y = emptyGrid[1].second;
+	snake = new Snake(random_x, random_y);
+	grid[random_y][random_x] = snake;
 }
 
 void GameEngine::moveSnake() {
@@ -51,12 +58,14 @@ void GameEngine::moveSnake() {
 	}
 	pair<int, int> dPos[5] = { {1,0},{0,1},{-1,0},{0,-1}, }; //check 5 directions
 	std::vector<pair<int, int>> potentialMoves = { {snake->getX(), snake->getY()} };
+
 	int x, y;
 	for (auto& p : dPos) {
 		x = snake->getX() + p.first;
 		y = snake->getY() + p.second;
 		if (x < 0 || x >= width || y < 0 || y >= height) continue;
 		if (dynamic_cast<Veggie*>(grid[y][x])) continue;
+		if (dynamic_cast < Rabbit* >(grid[y][x])) continue;
 		potentialMoves.push_back({ x,y });
 	}
 	vector<int> distance;
@@ -80,6 +89,7 @@ void GameEngine::moveSnake() {
 				rabbits.erase(rabbits.begin() + i);
 				delete ptr;
 				snakeHibernation = 5;
+				cout<<"Snake ate rabbit"<<endl;
 				break;
 			}
 		}
@@ -90,17 +100,7 @@ void GameEngine::moveSnake() {
 
 }
 
-/*
-The user is prompted for the name of the veggie file, and if the user’s file name doesn’t exist, repeatedly prompts for a new file name until a file that does exist is provided
-The height and width of the field should be read in and stored in the appropriate member variables
-The remaining lines in the files should be used to create new Veggie objects that are added to the vector of possible vegetables
-Generate the 2D, dynamic array of FieldInhabitant pointers of the dimensions specified in the file
-All slots should be initialized to nullptr
-The field should be populated with NUMBEROFVEGGIES number of new Veggie objects, located at random locations in the field
-If a chosen random location is occupied by another Veggie object, repeatedly choose a new location until an empty location is found
-Make sure you seed your random number generator to have new random fields each time you play the game
-Do not forget to close your file after you are done reading from it!
-*/
+//done
 void GameEngine::initVeggies() {
 	using namespace std;
 	ifstream f;
@@ -109,8 +109,9 @@ void GameEngine::initVeggies() {
 	string symbolTemp;
 	int scoreTemp;
 	while (!f.is_open()) {
-//#define DEBUG
-#if DEBUG
+
+
+#if DEBUG!=1
 		cout << "Please enter the name of the vegetable point file: " << endl;
 		cin >> buf;
 		f.open(buf);
@@ -164,21 +165,31 @@ void GameEngine::initVeggies() {
 		int x = v[i] % width;
 		int idx = i % vegetables.size();
 		grid[y][x] = new Veggie(vegetables[idx]->getSymbol(), vegetables[idx]->getName(), vegetables[idx]->getScorePoint());
-		//why create new veggies again?? we already have veggies.
 	}
 
 
 }
 
+//done
 void GameEngine::printField() {
 	//cout << "remaining veggies: " << remainingVeggies() << endl;
 	using namespace std;
 	string symbolBuf;
+#if DEBUG==1
+	cout<<" ";
+	for (int j = 0; j <= width; j++) {
+		cout << " "<<YEL<<j<<RST;
+	}
+	cout<<endl<<" ";
+#endif
 	for (int j = 0; j <= width; j++) {
 		cout << "##";
 	}
 	cout << endl;
 	for (int i = 0; i < height; i++) {
+#if DEBUG == 1
+		cout<<YEL<<i<<RST;
+#endif
 		cout << "#";
 		for (int j = 0; j < width; j++) {
 			auto &ptr = grid[i][j];
@@ -192,8 +203,11 @@ void GameEngine::printField() {
 			if (symbolBuf == "V") {
 				cout << BLU << symbolBuf << RST << " ";
 			} else if (symbolBuf == "R") {
+				cout << MAG << symbolBuf << RST << " ";
+			} else if (symbolBuf == "S") {
 				cout << RED << symbolBuf << RST << " ";
-			} else {
+			}
+			else {
 				cout << GRN << symbolBuf << RST << " ";
 			}
 #else
@@ -208,6 +222,7 @@ void GameEngine::printField() {
 
 }
 
+//done
 void GameEngine::initCaptain() {
 	bool captain_planted = false;
 	while (captain_planted != true) {
@@ -225,39 +240,56 @@ void GameEngine::initCaptain() {
 
 }
 
+//done
 void GameEngine::spawnRabbits() {
-	bool rabbit_planted = false;
+	//bool rabbit_planted = false;
 	vector<pair<int, int>> emptyGrid = getEmptyGrid();
 	randomGenerator.shuffleVector(emptyGrid);
+
 	Rabbit* newRabbit = new Rabbit(emptyGrid[0].first, emptyGrid[0].second);
 	grid[emptyGrid[0].second][emptyGrid[0].first] = newRabbit;
+
 	rabbits.push_back(newRabbit);
+
 	cout << "Oh no! Here comes another rabbit!" << endl;
 	cout << endl << "there are " << rabbits.size() << " rabbits" << endl;
 }
 
-bool GameEngine::moveCptVertical(int shiftValue) {
+//done
+void GameEngine::moveCptVertical(int shiftValue) {
 	return moveCptXY (0, shiftValue);
 }
-bool GameEngine::moveCptHorizontal(int shiftValue) {
+//done
+void GameEngine::moveCptHorizontal(int shiftValue) {
 	return moveCptXY (shiftValue,0);
 }
-
-bool GameEngine::moveCptXY(int shiftX, int shiftY) {
+//done
+void GameEngine::moveCptXY(int shiftX, int shiftY) {
 		//trying to move up or down-w/s
 
 	int current_x = this->captain->getX();
 	int current_y = this->captain->getY();
+
 	int potential_x = current_x + shiftX;
 	int potential_y = current_y + shiftY;
-	if (0 > potential_x || potential_x >= width) { return false; }
-	if (0 > potential_y || potential_y >= height) { return false; }
-	Veggie* veggie_to_collect = nullptr;
+
+	//check potential X position validity
+	if (0 > potential_x || potential_x >= width) {
+		return;
+	}
+	//check potential Y position validity
+	if (0 > potential_y || potential_y >= height) {
+		return;
+	}
+
+	Veggie *veggie_to_collect = nullptr;
 	veggie_to_collect = dynamic_cast<Veggie*>(grid[potential_y][potential_x]);
-	Rabbit* rabbit_to_kill =nullptr;
+
+	Rabbit *rabbit_to_kill = nullptr;
 	rabbit_to_kill = dynamic_cast<Rabbit*>(grid[potential_y][potential_x]);
 
-	if (grid[potential_y][potential_x] == nullptr) {
+
+	if (grid[potential_y][potential_x] == nullptr) { //there was nothing in potential move position.
 		//update grid
 		grid[current_y][current_x] = nullptr;
 		grid[potential_y][potential_x] = captain;
@@ -265,8 +297,8 @@ bool GameEngine::moveCptXY(int shiftX, int shiftY) {
 		captain->setX(potential_x);
 		captain->setY(potential_y);	//captain updated his position
 
-	} else if (veggie_to_collect) {
-		//cast was success-captain would land on a veggie position
+	} else if (veggie_to_collect) { //cast was success-captain would land on a veggie position
+
 		captain->setX(potential_x);
 		captain->setY(potential_y);
 		captain->addVeggie((Veggie*) grid[potential_y][potential_x]);//static cast as veggie and collect
@@ -275,13 +307,14 @@ bool GameEngine::moveCptXY(int shiftX, int shiftY) {
 		grid[current_y][current_x] = nullptr;
 		grid[potential_y][potential_x] = (FieldInhabitant*) captain;
 	}
-	else if (rabbit_to_kill) {
-		//cast was success-captain would kill rabbit
+	else if (rabbit_to_kill) { //cast was success-captain would kill rabbit
+
 		captain->setX(potential_x);
 		captain->setY(potential_y);
-		grid[captain->getY()][captain->getX()] = captain;
+		//grid[captain->getY()][captain->getX()] = captain;
 		rabbitsKilled = true;
 		//find and kill rabbit from vector
+		cout << "Finally got one of those pesky bunnies!" << endl;
 		for (int i = 0; i < rabbits.size(); i++) {
 			if (rabbits[i] == rabbit_to_kill) {
 				Rabbit* ptr = rabbits[i];
@@ -294,9 +327,13 @@ bool GameEngine::moveCptXY(int shiftX, int shiftY) {
 		grid[current_y][current_x] = nullptr;
 		grid[potential_y][potential_x] = captain;
 	}
-	return true;
+#if DEBUG ==1
+	cout<<CYN<<"Captain: x:"<<captain->getX()<<",y:"<<captain->getY()<<RST<<endl;
+#endif
+	return;
 }
 
+//done
 void GameEngine::intro() {
 	cout<<"Welcome to Captain Veggie!"<<endl;
 	cout<<"The rabbits are invading your garden and you must harvest"<<endl;
@@ -310,7 +347,7 @@ void GameEngine::intro() {
 		cout<<vegetables[i]->getSymbol()<<":"<<vegetables[i]->getName()<<", "<<vegetables[i]->getScorePoint()<<endl;
 	}
 
-	cout<<endl<<"Captain Veggie is "<<captain->getSymbol()<<" , and the rabbits are R"<<endl<<endl;
+	cout<<endl<<"Captain Veggie is "<<BLU<<captain->getSymbol()<<RST<<" , and the rabbits are "<<MAG<<"R"<<RST<<endl<<endl;
 
 	cout<<"Catching a rabbit is worth 5 points, but more are"<<endl;
 	cout<<"always on the way!"<<endl;
@@ -319,83 +356,182 @@ void GameEngine::intro() {
 }
 
 void GameEngine::moveRabbits() {
-	//vector<Creature> move_position;//x=-1,y=-1 indicates move forefeit
-
-	/*
-	moving can't be done immediately as next rabbits move might get affected.
-	all rabits move should depend on current snapshot of grid.
-	so plan moves first for each rabbit and execute later
-	*/
 
 	//plan moves
-	for (auto& rabbit : rabbits) {
-		if (randomGenerator.getRandomInt(0, 3) == 1) {
-			continue;
-		};
+	for (auto& rabbit : rabbits) {	//for each rabbit that exists on grid
+
+//		if (randomGenerator.getRandomInt(0, 3) == 1) {
+//			continue;
+//		};
+
 		//try to move each rabbit
-		pair<int, int> dPos[5] = { {1,0},{0,1},{-1,0},{0,-1},}; //check 5 directions
-		std::vector<pair<int, int>> potentialMoves = { {rabbit->getX(), rabbit->getY()}};
-		int x, y;
-		for (auto& p : dPos) {
-			x = rabbit->getX() + p.first;
-			y = rabbit->getY() + p.second;
-			if (x<0 || x>=width || y <0 || y >= height) continue;
-			if (x == captain->getX() || y == captain->getY()) continue;
-			if (dynamic_cast<Rabbit*>(grid[y][x])) continue;
-			potentialMoves.push_back({ x,y });
+
+		pair<int, int> dPos[8] =
+
+		{
+				{ -1, -1 }, { 0, -1 }, { 1, -1 },
+				{ -1, 0  },            { 1, 0  },
+				{ -1, 1  }, { 0, 1 },  { 1, 1  },
+		}; //8 directions
+
+		std::vector<pair<int, int>> potentialMoves = { {rabbit->getX(), rabbit->getY()}}; //init with current x,y
+
+		int potential_x, potential_y;
+
+		//calculate potential positions for this rabbit
+		for (auto &p : dPos) {
+
+			potential_x = rabbit->getX() + p.first;
+			potential_y = rabbit->getY() + p.second;
+
+			potentialMoves.push_back( { potential_x, potential_y });
 		}
-		randomGenerator.shuffleVector(potentialMoves);
-		x = potentialMoves[0].first;
-		y = potentialMoves[0].second;
+//#if DEBUG==1
+//		for(int i =0;i<potentialMoves.size();i++){
+//			cout<<"potential move :"<<potentialMoves[i].first<<","<<potentialMoves[i].second<<endl;
+//		}
+//#endif
+		randomGenerator.shuffleVector(potentialMoves); //shuffle all possible positions
+//#if DEBUG==1
+//		for(int i =0;i<potentialMoves.size();i++){
+//			cout<<"potential move after:"<<potentialMoves[i].first<<","<<potentialMoves[i].second<<endl;
+//		}
+//#endif
+
+		//first position is selected after shuffle-it is random
+		potential_x = potentialMoves[0].first;
+		potential_y = potentialMoves[0].second;
+
+		//rabbit would go out of bound- forfeit its move
+		if (potential_x < 0 || potential_x >= width || potential_y < 0 || potential_y >= height) {
+#if DEBUG
+			cout<<CYN<<"Move Forfeit:Rabbit->out x:"<<potential_x<<", y:"<<potential_y<<RST<<endl;
+#endif
+			continue;
+		}
+
+		//rabbit wants to move over captain- forfeit its move
+		if (potential_x == captain->getX() && potential_y == captain->getY()) {
+#if DEBUG
+			cout<<CYN<<"Move Forfeit:Rabbit->captain x:"<<potential_x<<", y:"<<potential_y<<RST<<endl;
+#endif
+			continue;
+		}
+
+		//rabbit would move over rabbit itself or other- forfeit its move
+		if (dynamic_cast<Rabbit*>(grid[potential_y][potential_x])) {
+#if DEBUG
+			cout<<CYN<<"Move Forfeit:Rabbit->Rabbit x:"<<potential_x<<", y:"<<potential_y<<RST<<endl;
+#endif
+			continue;
+		}
+
+		//rabbit would move over snake- forfeit its move
+		if (dynamic_cast<Snake*>(grid[potential_y][potential_x])) {
+#if DEBUG
+			cout<<CYN<<"Move Forfeit:Rabbit->snake x:"<<potential_x<<", y:"<<potential_y<<RST<<endl;
+#endif
+			continue;
+		}
+
+
+		//rabbit wants to move over veggie or empty space on grid
 		Veggie* veggie_to_eat = nullptr;
-		veggie_to_eat = dynamic_cast<Veggie*>(grid[y][x]);
+		veggie_to_eat = dynamic_cast<Veggie*>(grid[potential_y][potential_x]);
+
 		if (veggie_to_eat) {
-			delete veggie_to_eat;
-			//TODO:look into what remove means here
+#if DEBUG
+			cout<<CYN<<"Rabbit->Veg x:"<<potential_x<<", y:"<<potential_y<<"-"<<veggie_to_eat->getName()<<RST<<endl;
+#endif
+			delete veggie_to_eat;	//delete the existence of that veggie
 		}
-		grid[rabbit->getY()][rabbit->getX()] = nullptr;
-		grid[y][x] = rabbit;
-		rabbit->setX(x);
-		rabbit->setY(y);
+
+		grid[rabbit->getY()][rabbit->getX()] = nullptr;	//remove rabbit from current position
+		grid[potential_y][potential_x] = rabbit;		//move rabbit to new position
+
+		//let rabbit know of its new position
+
+		rabbit->setX(potential_x);
+		rabbit->setY(potential_y);
 	}
 }
 
-bool GameEngine::moveCaptain() {
-	int ret = false;
-	char action;
-	string buffer;
+//done
+void GameEngine::moveCaptain() {
+string action;
 	cout<<"Would you like to move up(W), down(S), left(A), or right(D):";
-	cin >> action;
-	getline(cin, buffer);
-	switch(action){
+	cin>>action;
+
+	if(action.length() >1){
+		cout << action << " is not a valid option!" << endl << endl;
+		return;
+	}
+	//action[0]='w';
+
+	switch(action[0]){
+
 		case 'W':
 		case 'w': {
-			ret = moveCptVertical(-1);	//up
+			if(captain->getY() == 0){
+				//cant go any further up
+				cout<<"You can't move that way!"<<endl;
+			}
+			else{
+				moveCptVertical(-1);		//up
+			}
 			break;
 		}
+
 		case 'S':
 		case 's': {
-			ret = moveCptVertical(1);		//down
+			if(captain->getY() == (this->height-1)){
+				//cant go any further down. already at last y
+				cout<<"You can't move that way!"<<endl;
+			}
+			else{
+				moveCptVertical(1);	//down
+			}
 			break;
 		}
+
 		case 'A':
 		case 'a': {
-			ret = moveCptHorizontal(-1);	//left
+
+			if(captain->getX() == 0){
+				//cant go any further left. already at last x
+				cout<<"You can't move that way!"<<endl;
+			}
+			else{
+				moveCptHorizontal(-1);	//left
+			}
 			break;
 		}
+
 		case 'D':
 		case 'd': {
-			ret = moveCptHorizontal(1);	//right
+
+			if(captain->getX() == (this->width - 1)){
+				//cant go any further left. already at last x
+				cout<<"You can't move that way!"<<endl;
+			}
+			else{
+				moveCptHorizontal(1);	//right
+			}
 			break;
 		}
+
 		default: {
 			cout << action << " is not a valid option!" << endl << endl;
 		}
+
 	}
-	return ret;
 }
 
+//repair
+//rabbit doesnt spawn at 0
+//remove rest of the code to main
 void GameEngine::timerTick() {
+/*
 	if (remainingVeggies() == 0) isOver = "No veggie left";
 	system("cls");
 	if (rabbitsKilled) {
@@ -403,46 +539,69 @@ void GameEngine::timerTick() {
 		cout << "finally got one of these pesky rabbits" << endl;
 	}
 	if(timer%5 == 0 && timer != 0){
-		if(rabbits.size() < MAXNUMBEROFRABBITS) spawnRabbits();
+		if (rabbits.size() < MAXNUMBEROFRABBITS) {
+			spawnRabbits();
+		}
 	}
 	timer++;
 	cout << remainingVeggies() << " Veggies remaining. Current Score: " << getScore() << endl;
-	bool ret = false;
+	//bool ret = false;
 
 	printField();
 	moveRabbits();
-	while (!ret) {
-		ret = moveCaptain();
-	}
+	//while (!ret) {
+	//	ret = moveCaptain();
+	//}
+	moveCaptain();
 	moveSnake();
 
 	
 	
-	ret = false;
-	
+	//ret = false;
+	*/
+
+	if(timer%5 == 0){
+		if(rabbits.size()!=MAXNUMBEROFRABBITS){
+			spawnRabbits();
+		}
+	}
+	moveSnake();
+	timer++;
 
 }
 
+//repair-verify
+//game over only when noo veggies left
 void GameEngine::gameOver() {
-	system("cls");
+
+//	system("cls");
+//	this->printField();
+//	cout << isOver << endl;
+//	cout<<"GAME OVER!\nYou managed to harvest the following vegetables:"<<endl;
+//	for(int i=0;i<captain->Veggies.size();i++){
+//		cout<<captain->Veggies[i]->getName()<<endl;
+//	}
+//	cout<<"Your Score was: "<<getScore() << endl;
+
 	this->printField();
-	cout << isOver << endl;
 	cout<<"GAME OVER!\nYou managed to harvest the following vegetables:"<<endl;
 	for(int i=0;i<captain->Veggies.size();i++){
 		cout<<captain->Veggies[i]->getName()<<endl;
 	}
-	cout<<"Your Score was: "<<getScore() << endl;
+	cout<<"Your Score was: "<<score<<endl;
 }
 
+//done
 int GameEngine::getScore() {
 	return this->score;
 }
 
+//done
 int GameEngine::remainingVeggies() {
 	int remainingVeggies = 0;
 	for (int i = 0; i < height; i++) {
 		for (int j = 0; j < width; j++) {
-			FieldInhabitant* &ptr = grid[i][j];
+			FieldInhabitant *&ptr = grid[i][j];
 			if (!ptr)
 				continue;
 			else {
