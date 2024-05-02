@@ -570,7 +570,6 @@ void GameEngine::timerTick() {
 
 }
 
-//repair-verify
 //game over only when noo veggies left
 void GameEngine::gameOver() {
 

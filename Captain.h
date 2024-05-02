@@ -11,7 +11,7 @@
 
 #include <vector>
 #include "Creature.h"
-#include "veggie.h"
+#include "Veggie.h"
 
 class Captain: public Creature {
 public:

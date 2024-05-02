@@ -8,7 +8,6 @@ Appropriate header guards
 
 Jiayou Qin 04/18/2025
 */
-#
 
 #ifndef FIELDINHABITANT_H
 #define FIELDINHABITANT_H

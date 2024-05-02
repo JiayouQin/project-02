@@ -15,7 +15,7 @@ Appropriate header guards
 #pragma once
 #ifndef VEGGIE_H
 #define VEGGIE_H
-#include "FieldInHabitant.h"
+#include "FieldInhabitant.h"
 #include <string>
 
 
