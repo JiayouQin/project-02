@@ -1,11 +1,11 @@
-/*
-04/07/2024
-@author Jiayou Qin
-@Brief Please give us bonus points
-*/
+/**
+ * Name:		Jiayou Qin
+ * Date:		May 5, 2024
+ * Subject:		CPE553
+ * Filename:	Snake.h
+ * Description:	Project 2
+ */
 
-
-#pragma once
 #ifndef SNAKE_H
 #define SNAKE_H
 #include <iostream>
@@ -16,9 +16,9 @@ class Snake :public Creature {
 	
 
 public:
-	Snake(int x = 0, int y = 0) :Creature(x, y, "S") {
-	};
-	//check if any neighbour is valid for movement
+
+	Snake(int x, int y);
+	virtual ~Snake();
 
 };
 

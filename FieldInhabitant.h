@@ -1,13 +1,10 @@
-/*
-In a file named FieldInhabitant.h, define a class named FieldInhabintant, which should contain:
-A string member variable to store a symbol
-A declaration for a public constructor that takes in a parameter representing a string symbol for the field inhabitant (vegetable, rabbit, captain, etc)
-Declarations for appropriate getter/setter functions
-A declaration for a virtual deconstructor
-Appropriate header guards
-
-Jiayou Qin 04/18/2025
-*/
+/**
+ * Name:		Jiayou Qin
+ * Date:		Apr 18, 2024
+ * Subject:		CPE553
+ * Filename:	FieldInhabitant.h
+ * Description:	Project 2
+ */
 
 #ifndef FIELDINHABITANT_H
 #define FIELDINHABITANT_H

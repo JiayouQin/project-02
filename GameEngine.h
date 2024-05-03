@@ -1,11 +1,11 @@
-/*
-In a file named GameEngine.h, define a class named GameEngine, which should contain:
+/**
+ * Name:		Jiayou Qin, Pratik gawde, Pranita Shewale
+ * Date:		May 5, 2024
+ * Subject:		CPE553
+ * Filename:	GameEngine.h
+ * Description:	Project 2
+ */
 
-
-Declarations for public functions named getScore() and remainingVeggies() that take in no parameters and return integers representing the player’s score, and the number of vegetables still remaining on the field, respectively
-
-Appropriate header guards
-*/
 #ifndef GAME_ENGINE_H
 #define GAME_ENGINE_H
 
@@ -45,11 +45,11 @@ private:
 	void moveCptXY(int, int);
 	void moveCptVertical(int);
 	void moveCptHorizontal(int);
+	void resetSnake();
 
 public:
-	std::string isOver = "";
-	int snakeHibernation = 0;
-	int rabbitsKilled = false;
+
+	~GameEngine();
 	void initSnake();
 	void moveSnake();
 	void initializeGame();

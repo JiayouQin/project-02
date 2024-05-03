@@ -1,3 +1,12 @@
+/**
+ * Name:		Jiayou Qin
+ * Date:		May 5, 2024
+ * Subject:		CPE553
+ * Filename:	getRandom.h
+ * Description:	Project 2
+ */
+
+
 #pragma once
 #ifndef GET_RANDOM_H
 #define GET_RANDOM_H
