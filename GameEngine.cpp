@@ -403,9 +403,9 @@ void GameEngine::moveRabbits() {
 		};
 		//try to move each rabbit
 		pair<int, int> dPos[8] = { 
-			{-1,-1}, {-1,0},{-1,1},
-			{0,-1}, {0,1},
-			{-1,1}, {-1,1},{-1,1}, }; //check 8 directions
+			{-1,-1}, {0,-1},{1,-1},
+			{-1,0}, {1,0},
+			{-1,1}, {0,1},{1,1}, }; //check 8 directions
 		std::vector<pair<int, int>> potentialMoves = { {rabbit->getX(), rabbit->getY()}};
 		int x, y;
 		for (auto& p : dPos) {
@@ -416,9 +416,9 @@ void GameEngine::moveRabbits() {
 			if (dynamic_cast<Rabbit*>(grid[y][x])) continue;
 			potentialMoves.push_back({ x,y });
 		}
-		randomGenerator->shuffleVector(potentialMoves);
-		x = potentialMoves[0].first;
-		y = potentialMoves[0].second;
+		int choice = randomGenerator->getRandomInt(0, potentialMoves.size()-1);
+		x = potentialMoves[choice].first;
+		y = potentialMoves[choice].second;
 		Veggie* veggie_to_eat = nullptr;
 		veggie_to_eat = dynamic_cast<Veggie*>(grid[y][x]);
 		if (veggie_to_eat) {

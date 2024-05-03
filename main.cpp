@@ -4,8 +4,10 @@
 
 using namespace std;
 int main() {
+	
 	GameEngine engine;
 	engine.initializeGame();
+	cv::namedWindow("canvas", cv::WINDOW_NORMAL);
 	engine.intro();
 
 	while(engine.isOver == "") {
