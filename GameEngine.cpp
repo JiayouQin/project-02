@@ -3,7 +3,7 @@
 #include <sstream>
 #include <iostream>
 #define GUI_MODE
-
+#define DEBUG true
 #define COLOR_DEFINED_
 #ifdef COLOR_DEFINED
 #define RED "\e[0;31m"
@@ -17,12 +17,12 @@
 
 //return empty grid in x,y format
 std::vector<std::pair<int, int>> GameEngine::getEmptyGrid() {
-	PlaySound(TEXT("assets/theme.wav"), NULL, SND_FILENAME | SND_ASYNC | SND_LOOP | SND_NOSTOP);
 	std::vector<std::pair<int, int>> emptyGrid;
 	for (int y = 0; y < height; y++) {
 		for (int x = 0; x < width; x++) {
-			if (grid[y][x]) continue;
-			emptyGrid.push_back({ x,y });
+			if (grid[y][x] == nullptr) { 
+				emptyGrid.push_back({ x,y });
+			}	
 		}
 	}
 	return emptyGrid;
@@ -38,12 +38,25 @@ void GameEngine::initializeGame() {
 	initSnake();
 	cv::resize(cv::imread("assets/rabbit.png"), rabbitSprite, cv::Size(50, 50));
 	timer = 0;
+	PlaySound(TEXT("assets/theme.wav"), NULL, SND_FILENAME | SND_ASYNC | SND_LOOP | SND_NOSTOP);
 }
 
 void GameEngine::initSnake() {
 	auto emptyGrid = getEmptyGrid();
+	auto cpr = emptyGrid;
 	randomGenerator->shuffleVector(emptyGrid);
-	int x = emptyGrid[0].first; int y = emptyGrid[1].second;
+	
+
+
+
+
+	int x = emptyGrid.front().first; 
+	int y = emptyGrid.front().second;
+	if (grid[y][x]) { 
+		auto ref = grid[y][x];
+		std::cout << x << " " << y << std::endl;
+		throw "empty grid functino error"; 
+	}
 	snake = new Snake(x,y);
 	grid[y][x] = snake;
 }
@@ -61,6 +74,10 @@ void GameEngine::resetSnake() {
 
 void GameEngine::moveSnake() {
 	using namespace std;
+	if (snakeHibernation) {
+		snakeHibernation--;
+		return;
+	}
 
 	pair<int, int> dPos[5] = { {1,0},{0,1},{-1,0},{0,-1}, }; //check 5 directions
 	std::vector<pair<int, int>> potentialMoves = { {snake->getX(), snake->getY()} };
@@ -70,7 +87,6 @@ void GameEngine::moveSnake() {
 		y = snake->getY() + p.second;
 		if (x < 0 || x >= width || y < 0 || y >= height) continue;
 		if (dynamic_cast<Veggie*>(grid[y][x])) continue;
-		if (dynamic_cast<Rabbit*>(grid[y][x])) continue; // does not move into rabbits
 		potentialMoves.push_back({ x,y });
 	}
 	vector<int> distance;
@@ -92,22 +108,22 @@ void GameEngine::moveSnake() {
 		return;
 	}
 	//unused
-	//Rabbit* rabbitPtr = dynamic_cast<Rabbit*>(grid[tY][tX]);
-	//if (rabbitPtr) {
-	//	for (int i = 0; i < rabbits.size(); i++) {
-	//		if (rabbits[i] == rabbitPtr) {
-	//			Rabbit* ptr = rabbits[i];
-	//			rabbits.erase(rabbits.begin() + i);
-	//			delete ptr;
-	//			snakeHibernation = 5;
-	//			break;
-	//		}
-	//	}
-	//}
+	Rabbit* rabbitPtr = dynamic_cast<Rabbit*>(grid[tY][tX]);
+	if (rabbitPtr) {
+		for (int i = 0; i < rabbits.size(); i++) {
+			if (rabbits[i] == rabbitPtr) {
+				Rabbit* ptr = rabbits[i];
+				rabbits.erase(rabbits.begin() + i);
+				delete ptr;
+				snakeHibernation = 5;
+				cout << "Snake has eaten a rabbit" << endl;
+				break;
+			}
+		}
+	}
 	grid[snake->getY()][snake->getX()] = nullptr;
 	snake->setX(tX); snake->setY(tY);
 	grid[tY][tX] = snake;
-
 }
 
 /*
@@ -129,8 +145,12 @@ void GameEngine::initVeggies() {
 	string symbolTemp;
 	int scoreTemp;
 	while (!f.is_open()) {
+#if DEBUG
+		buf = "veggiefile1.csv";
+#else
 		cout << "Please enter the name of the vegetable point file: " << endl;
 		cin >> buf;
+#endif
 		f.open(buf);
 	}
 	int i = 0;
@@ -164,7 +184,7 @@ void GameEngine::initVeggies() {
 	for (int i = 0; i < height; i++) {
 		grid[i] = new FieldInhabitant*[width];
 	}
-	vector <int> v;
+	vector <int> v = {};
 	for (int i = 0; i < height * width; i++) {
 		v.push_back(i);
 	}
@@ -337,6 +357,10 @@ bool GameEngine::moveCptXY(int shiftX, int shiftY) {
 		grid[current_y][current_x] = nullptr;
 		grid[potential_y][potential_x] = captain;
 	}
+	else {
+	
+	}
+
 	return true;
 }
 
@@ -378,7 +402,10 @@ void GameEngine::moveRabbits() {
 			continue;
 		};
 		//try to move each rabbit
-		pair<int, int> dPos[5] = { {1,0},{0,1},{-1,0},{0,-1},}; //check 5 directions
+		pair<int, int> dPos[8] = { 
+			{-1,-1}, {-1,0},{-1,1},
+			{0,-1}, {0,1},
+			{-1,1}, {-1,1},{-1,1}, }; //check 8 directions
 		std::vector<pair<int, int>> potentialMoves = { {rabbit->getX(), rabbit->getY()}};
 		int x, y;
 		for (auto& p : dPos) {

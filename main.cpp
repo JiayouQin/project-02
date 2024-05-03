@@ -1,4 +1,7 @@
+#define _GLIBCXX_HAS_GTHREADS true
+
 #include "gameEngine.h"
+
 using namespace std;
 int main() {
 	GameEngine engine;
