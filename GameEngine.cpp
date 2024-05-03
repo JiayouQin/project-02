@@ -644,7 +644,7 @@ void GameEngine::moveSnake() {
 void GameEngine::resetSnake() {
 	auto emptyGrid = getEmptyGrid();
 	randomGenerator.shuffleVector(emptyGrid);
-	int x = emptyGrid[0].first; int y = emptyGrid[1].second;
+	int x = emptyGrid[0].first; int y = emptyGrid[0].second;
 	grid[snake->getY()][snake->getX()] = nullptr;
 	grid[y][x] = snake;
 	snake->setX(x);
@@ -791,7 +791,7 @@ int GameEngine::getScore() {
  */
 GameEngine::~GameEngine() {
 
-	//cout<<"Destroying engine"<<endl;
+//	cout<<"Destroying engine"<<endl;
 
 	//delete all FieldInhabitants still on grid
 	for (int y = 0; y < height; y++) {
