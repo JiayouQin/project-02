@@ -3,7 +3,7 @@
 #include <sstream>
 #include <iostream>
 #define GUI_MODE
-#define DEBUG true
+#define DEBUG false
 #define COLOR_DEFINED_
 #ifdef COLOR_DEFINED
 #define RED "\e[0;31m"
