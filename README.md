@@ -4,4 +4,5 @@ Captain Veggie
     <img src="./Cover.png" alt="cover" style="width: 50%;">
 </div>
 
-Test Text
+
+Final Project of CPE 553
